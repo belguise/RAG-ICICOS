@@ -1,0 +1,37 @@
+[project]
+name = "agentic-rag-sop"
+version = "0.1.0"
+description = "Agentic RAG for SOP and BPMN Knowledge - Phase 1 Basic Foundation"
+readme = "README.md"
+authors = [
+    { name = "belguise" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    "langchain-chroma>=0.1.4",
+    "chromadb>=0.5.0",
+    "sentence-transformers>=3.0.0",
+    "pymupdf>=1.24.0",
+    "pypdf>=4.0.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.2.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.7.0",
+]
+
+[project.scripts]
+agentic-rag-sop = "agentic_rag_sop.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.4,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.0.0",
+    "pytest>=8.0.0",
+]

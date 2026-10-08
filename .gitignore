@@ -1,0 +1,151 @@
+# ==============================================================================
+# Environment & Secrets (CRITICAL: Never commit API keys or credentials)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials*
+secrets*
+service_account*
+service-account*
+
+# ==============================================================================
+# Manuscript, Papers, LaTeX Sources, Drafts & Internal Review Packages
+# ==============================================================================
+FINAL PAPER Q1/
+FINAL PAPER Q1_LATEX_SOURCE/
+FINAL_PAPER_Q1_CAMERA_READY/
+FINAL_SUBMISSION/
+DRAFT PAPER/
+manuscript/
+Paper_Reproducibility_Package/
+Q1_DEFENSE_PACKAGE/
+Q1_SUBMISSION_PACKAGE/
+paper_figures/
+paper_results/
+figures/
+docs/
+tools/
+AUDIT/
+AUDIT_REPORT.md
+FINAL_SUBMISSION_CHECKLIST.md
+Scientific_Consistency_Audit_FINAL.md
+Camera_ready_manuscript.tex
+IEEEtran.cls
+paper_draft.md
+references.bib
+Reviewer_defense.md
+reviewer_attack_simulation.md
+FINAL_Q1_REVIEW_REPORT.md
+README_EXPERIMENT.md
+REPRODUCIBILITY.md
+evaluation/generate_reviewer_defense.py
+
+# ==============================================================================
+# Research Outputs, Raw Results, Logs & Checkpoints
+# ==============================================================================
+results/
+evaluation/results/
+outputs/
+output/
+runs/
+artifacts/
+checkpoints/
+logs/
+*.log
+
+# ==============================================================================
+# Raw Data, Datasets, Zenodo Packages & Compressed Archives
+# ==============================================================================
+data/
+datasets/
+dataset/
+benchmark/
+benchmarks/
+Zenodo_Dataset_Package/
+evaluation/dataset/icicos_process_qa.json
+*.zip
+*.tar.gz
+*.7z
+
+# ==============================================================================
+# Database, Local Vector Stores & Runtime Traces
+# ==============================================================================
+*.db
+*.sqlite3
+
+# ==============================================================================
+# Notebooks & Exploratory Artifacts
+# ==============================================================================
+notebook/
+.ipynb_checkpoints/
+
+# ==============================================================================
+# Web Frontend & Node Artifacts
+# ==============================================================================
+node_modules/
+package-lock.json
+package.json
+frontend/
+
+# ==============================================================================
+# Python & Virtual Environments
+# ==============================================================================
+__pycache__/
+*.py[ocd]
+*$py.class
+build/
+dist/
+wheels/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+ENV/
+
+# ==============================================================================
+# Binaries, Office Documents & Generated Media
+# ==============================================================================
+*.exe
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.png
+*.jpg
+*.jpeg
+*.eps
+
+# ==============================================================================
+# Editor & OS Files
+# ==============================================================================
+.vscode/
+.idea/
+.kilo/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ==============================================================================
+# LaTeX Temporary / Intermediate Files
+# ==============================================================================
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.xdv

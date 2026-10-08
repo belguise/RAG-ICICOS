@@ -1,0 +1,131 @@
+# ==============================================================================
+# ICICoS Agentic Hybrid RAG: Official Evaluation & Reproducibility Configuration
+# Formatted for IEEE Transactions (TKDE) / ACM TOIS Publication Standards
+# ==============================================================================
+
+experiment:
+  title: "Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning"
+  manuscript_target: "IEEE TKDE / ACM TOIS"
+  domain_scope: "ICICoS Enterprise Workflow Intelligence"
+  version: "1.0.0"
+  random_seed: 42
+
+dataset:
+  name: "ICICoS ProcessQA"
+  path: "evaluation/dataset/icicos_process_qa.json"
+  total_queries: 338
+  stratification:
+    workflow: 108
+    hybrid: 81
+    decision_gateway: 80
+    document_requirement: 69
+  schema:
+    - id
+    - question
+    - category
+    - expected_source
+    - expected_actor
+    - expected_process
+    - expected_answer
+    - expected_bpmn_path
+
+models:
+  generation:
+    provider: "Google Gemini"
+    model_name: "gemini-1.5-flash"
+    temperature: 0.0
+    top_p: 0.95
+    max_output_tokens: 1024
+    system_instruction: "Zero-hallucination deterministic procedural question answering"
+  
+  evaluator:
+    framework: "RAGAS"
+    ragas_version: "0.4.3"
+    judge_llm: "gemini-1.5-flash"
+    judge_temperature: 0.0
+    judge_max_retries: 3
+    embedding_model: "paraphrase-multilingual-MiniLM-L12-v2"
+    embedding_dim: 384
+    batch_size: 10
+
+retrieval_budgets:
+  llm_only:
+    k_sop: 0
+    k_bpmn: 0
+    max_tokens: 0
+    description: "Parametric zero-shot baseline without external context"
+  
+  vector_rag:
+    k_sop: 6
+    k_bpmn: 0
+    retriever: "ChromaDB Dense Semantic Search"
+    distance_metric: "cosine"
+  
+  graph_rag:
+    k_sop: 0
+    k_bpmn: 4
+    retriever: "NetworkX Subgraph Neighborhood Expansion"
+    expansion_hops: 2
+  
+  static_hybrid:
+    k_sop: 5
+    k_bpmn: 3
+    retriever: "Fixed Uniform Direct Concatenation"
+    max_chunks: 8
+  
+  proposed_agentic:
+    router_type: "Adaptive Gating Network (Mixture-of-Retrievers)"
+    max_total_chunks: 8
+    dynamic_quotas:
+      sop_dominant: { k_sop: 6, k_bpmn: 2 }
+      bpmn_dominant: { k_sop: 3, k_bpmn: 4 }
+      dual_hybrid: { k_sop: 5, k_bpmn: 3 }
+
+evaluation_metrics:
+  primary_ragas:
+    - name: "Faithfulness"
+      formulation: "NLI-based atomic claim verification against retrieved premises"
+      range: [0.0, 1.0]
+      direction: "maximize"
+    - name: "Answer_Relevancy"
+      formulation: "Semantic intent responsiveness via synthetic reverse-query cosine similarity"
+      range: [0.0, 1.0]
+      direction: "maximize"
+    - name: "Context_Precision"
+      formulation: "Mean Average Precision at rank k (MAP@k) for retrieved chunks"
+      range: [0.0, 1.0]
+      direction: "maximize"
+    - name: "Context_Recall"
+      formulation: "Proportion of ground-truth reference propositions captured in context"
+      range: [0.0, 1.0]
+      direction: "maximize"
+  
+  bpmn_procedural:
+    - name: "Process_Path_Accuracy"
+      abbreviation: "PPA"
+      formulation: "0.6 * Milestone_Coverage + 0.4 * Monotonic_Order_Preservation"
+      range: [0.0, 1.0]
+    - name: "Gateway_Decision_Accuracy"
+      abbreviation: "GDA"
+      formulation: "XOR/OR conditional branch trigger identification and target resolution"
+      range: [0.0, 1.0]
+    - name: "Actor_Attribution_Accuracy"
+      abbreviation: "AAA"
+      formulation: "Swimlane organizational role assignment fidelity"
+      range: [0.0, 1.0]
+
+statistical_validation:
+  unit_of_analysis: "query-level paired comparison"
+  sample_size: 338
+  degrees_of_freedom: 337
+  normality_test: "Shapiro-Wilk (alpha = 0.05)"
+  parametric_test: "Paired Student's t-test (two-tailed)"
+  non_parametric_test: "Wilcoxon signed-rank test (two-tailed)"
+  effect_size: "Cohen's d (paired formulation)"
+  confidence_interval: "95% CI"
+
+hardware_environment:
+  cpu: "AMD Ryzen 7 5800H with Radeon Graphics (8 cores, 16 threads, 3.20 GHz)"
+  ram: "16.0 GB DDR4"
+  os: "Microsoft Windows 11 Enterprise (64-bit)"
+  python_version: "3.11"
