@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ICICOS Experiment Run Metadata Schema",
+  "description": "Standardized schema for recording reproducible experimental executions in ICICOS benchmark suites",
+  "type": "object",
+  "required": [
+    "run_id",
+    "git_commit_sha",
+    "timestamp_start",
+    "timestamp_end",
+    "environment",
+    "configuration",
+    "provenance_hashes",
+    "cohort_metadata",
+    "executions"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "description": "Unique run identifier (e.g., run_20261103_gemini_primary_n70)"
+    },
+    "git_commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "40-character Git commit hash at the time of execution"
+    },
+    "timestamp_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timestamp_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "environment": {
+      "type": "object",
+      "required": ["os", "python_version", "key_dependencies"],
+      "properties": {
+        "os": { "type": "string" },
+        "python_version": { "type": "string" },
+        "key_dependencies": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "required": [
+        "generator_model",
+        "critic_model",
+        "embedding_model",
+        "temperature",
+        "random_seed"
+      ],
+      "properties": {
+        "generator_model": { "type": "string" },
+        "critic_model": { "type": "string" },
+        "embedding_model": { "type": "string" },
+        "temperature": { "type": "number" },
+        "top_p": { "type": "number" },
+        "random_seed": { "type": "integer" },
+        "max_repair_iterations": { "type": "integer" },
+        "critic_threshold": { "type": "number" }
+      }
+    },
+    "provenance_hashes": {
+      "type": "object",
+      "required": [
+        "dataset_sha256",
+        "manifest_sha256",
+        "config_sha256"
+      ],
+      "properties": {
+        "dataset_sha256": { "type": "string" },
+        "manifest_sha256": { "type": "string" },
+        "config_sha256": { "type": "string" },
+        "environment_lock_sha256": { "type": "string" }
+      }
+    },
+    "cohort_metadata": {
+      "type": "object",
+      "required": ["cohort_name", "total_queries", "category_counts"],
+      "properties": {
+        "cohort_name": { "type": "string" },
+        "total_queries": { "type": "integer" },
+        "category_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        }
+      }
+    },
+    "executions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "query_id",
+          "architecture",
+          "latency_seconds",
+          "raw_answer",
+          "retrieved_documents",
+          "evaluation_outputs"
+        ],
+        "properties": {
+          "query_id": { "type": "string" },
+          "architecture": { "type": "string" },
+          "latency_seconds": { "type": "number" },
+          "raw_answer": { "type": "string" },
+          "retrieved_documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": { "type": "string" },
+                "content_snippet": { "type": "string" },
+                "score": { "type": "number" }
+              }
+            }
+          },
+          "evaluation_outputs": {
+            "type": "object",
+            "properties": {
+              "faithfulness": { "type": ["number", "null"] },
+              "answer_relevancy": { "type": ["number", "null"] },
+              "context_precision": { "type": ["number", "null"] },
+              "context_recall": { "type": ["number", "null"] },
+              "sa_f1": { "type": ["number", "null"] },
+              "ppa": { "type": ["number", "null"] },
+              "gda": { "type": ["number", "null"] },
+              "aaa": { "type": ["number", "null"] }
+            }
+          },
+          "execution_error": { "type": ["string", "null"] },
+          "revision_cycles_used": { "type": "integer" },
+          "verification_status": { "type": "string" }
+        }
+      }
+    }
+  }
+}

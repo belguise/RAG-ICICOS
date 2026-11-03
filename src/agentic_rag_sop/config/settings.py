@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     TOP_K: int = 4
     SEARCH_TYPE: Literal["similarity", "mmr"] = "similarity"
 
+    # Phase 5 Critic & Bounded Self-Repair Settings
+    MAX_REPAIR_ITERATIONS: int = 2
+    CRITIC_CONFIDENCE_THRESHOLD: float = 0.85
+
     # Phase 7 Backend API & Database Settings
     DATABASE_URL: str = "sqlite:///./data/icicos_rag.db"
     API_PORT: int = 8000

@@ -17,6 +17,8 @@ service-account*
 # ==============================================================================
 # Manuscript, Papers, LaTeX Sources, Drafts & Internal Review Packages
 # ==============================================================================
+FINAL KBS FIX/
+Titlelabel1__2_/
 FINAL PAPER Q1/
 FINAL PAPER Q1_LATEX_SOURCE/
 FINAL_PAPER_Q1_CAMERA_READY/
@@ -31,8 +33,13 @@ paper_results/
 figures/
 docs/
 tools/
+scripts/
 AUDIT/
 AUDIT_REPORT.md
+AUDIT_CODE_AND_EXPERIMENTS.md
+CRITIC_SELF_REPAIR_VALIDATION.md
+MANUSCRIPT_CLAIM_EVIDENCE_MATRIX.md
+PHASE9_SCIENTIFIC_HARDENING_AUDIT.md
 FINAL_SUBMISSION_CHECKLIST.md
 Scientific_Consistency_Audit_FINAL.md
 Camera_ready_manuscript.tex
@@ -45,6 +52,9 @@ FINAL_Q1_REVIEW_REPORT.md
 README_EXPERIMENT.md
 REPRODUCIBILITY.md
 evaluation/generate_reviewer_defense.py
+evaluation/generate_master_results_audit.py
+evaluation/METRIC_REGRESSION_REPORT.md
+evaluation/archive/
 
 # ==============================================================================
 # Research Outputs, Raw Results, Logs & Checkpoints
@@ -68,6 +78,8 @@ dataset/
 benchmark/
 benchmarks/
 Zenodo_Dataset_Package/
+ICICOS_ProcessQA_Dataset/
+uv.lock
 evaluation/dataset/icicos_process_qa.json
 *.zip
 *.tar.gz

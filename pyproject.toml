@@ -1,7 +1,7 @@
 [project]
 name = "agentic-rag-sop"
-version = "0.1.0"
-description = "Agentic RAG for SOP and BPMN Knowledge - Phase 1 Basic Foundation"
+version = "0.2.0"
+description = "ICICOS: Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering"
 readme = "README.md"
 authors = [
     { name = "belguise" }
@@ -15,12 +15,27 @@ dependencies = [
     "langchain-chroma>=0.1.4",
     "chromadb>=0.5.0",
     "sentence-transformers>=3.0.0",
+    "torch>=2.0.0",
+    "scipy>=1.14.0",
+    "numpy>=1.26.0",
+    "pandas>=2.0.0",
+    "scikit-learn>=1.4.0",
+    "networkx>=3.0.0",
     "pymupdf>=1.24.0",
     "pypdf>=4.0.0",
     "pydantic>=2.7.0",
     "pydantic-settings>=2.2.0",
     "python-dotenv>=1.0.0",
     "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+cross-backbone = [
+    "langchain-groq>=0.1.0",
+    "groq>=0.11.0",
+]
+eval = [
+    "ragas>=0.2.0",
 ]
 
 [project.scripts]

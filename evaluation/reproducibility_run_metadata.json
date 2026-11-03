@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "ICICOS_BENCHMARK_PROVENANCE_20261103",
+  "git_commit_sha": "4defd04678f66ea64f674ea0bf107fc7f907edc3",
+  "timestamp_utc": "2026-11-02T18:50:42.746775+00:00",
+  "target_journal": "Knowledge-Based Systems (Elsevier)",
+  "manuscript_title": "ICICOS: An Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering",
+  "hardware_environment": {
+    "os": "Windows 10 (64bit)",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "python_version": "3.11.9",
+    "python_compiler": "MSC v.1938 64 bit (AMD64)",
+    "active_venv": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python311"
+  },
+  "dependency_freeze_hash": {
+    "environment_lock": "9d4b961ce9691566fb6bf02f4e7e948517432efc6cf162f1933d9011c1b40cd7",
+    "requirements_txt": "6653a32d19a2294b5c3e97252fb3a8edead6adfc9a09bd20427c59990c9bbc18",
+    "pyproject_toml": "aa3b779b262881c4486096c44740869068f8f69815fdd5d8e20f34b58ec61a04"
+  },
+  "key_dependencies": {
+    "langchain": "1.3.16",
+    "langchain_core": "1.6.0",
+    "sentence_transformers": "6.0.1",
+    "chromadb": "1.5.9 (in .venv) / 0.5.0+ (compatible)",
+    "scipy": "1.17.1",
+    "numpy": "2.4.6",
+    "networkx": "3.6.1",
+    "torch": "2.14.0",
+    "ragas": "0.4.3 (in .venv)",
+    "groq": "0.37.1 (in .venv)",
+    "pydantic": "2.13.4"
+  },
+  "model_configurations": {
+    "generator": {
+      "model_identifier": "gemini-3.5-flash-lite",
+      "provider": "Google AI Studio / Generative Language API v1beta",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "timeout_seconds": 60,
+      "max_retries": 2,
+      "seed_support": false
+    },
+    "critic": {
+      "model_identifier": "gemini-3.5-flash-lite",
+      "temperature": 0.0,
+      "confidence_threshold": 0.85,
+      "max_repair_iterations": 2,
+      "dimensions": [
+        "factual_grounding",
+        "domain_compliance",
+        "workflow_correctness",
+        "sop_correctness",
+        "answer_completeness"
+      ]
+    },
+    "secondary_backbone": {
+      "model_identifier": "qwen/qwen3.8-27b",
+      "provider": "Groq Cloud API v1",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "timeout_seconds": 60,
+      "max_retries": 2
+    },
+    "embedding": {
+      "model_identifier": "paraphrase-multilingual-MiniLM-L12-v2",
+      "provider": "sentence-transformers / HuggingFace",
+      "dimension": 384,
+      "distance_metric": "cosine"
+    }
+  },
+  "provenance_hashes": {
+    "canonical_dataset_json": "3ff56beac177b42706e34abac269d58ce4f0ef4af699cad47a6e71c1aecc356a",
+    "canonical_dataset_csv": "5cef9731f7a768c8cf1f78575d38f1485166213d8395f2a33979c74cbe2fba3b",
+    "primary_manifest_json": "d848f2548b3da31e67a6b0e6862c85a3631047ff2e8d22309f0c54ad2420aa9f",
+    "primary_n70_cohort_csv": "29c943a6e75d136625f93a81b82989c168a02ffee12a5778c366d1d70343049d",
+    "procedural_n60_cohort_csv": "00af2ee8e2ba0724033fef0b4266428f5ab19e91e39b77b83c6df6ee73bb78c7",
+    "ablation_n20_cohort_csv": "1c91a12148cb7c184bce1521f4f7b852a62c9346bbe56e47fc67c5db136c6f2e",
+    "cross_backbone_n34_cohort_csv": "3efc4d09e2d34d42d6193b7192361a79b08aa34268fda68cc4ec47a7a05ab8ba",
+    "master_results_csv": "fbcc8b50e5514ee097d4f9dd9632dd2d4a57d73f0c8b76a670219aae13ebbbf6",
+    "experiment_config_json": "3095680345cdad8828b526d6248661cf9499b9c4ab75f3d858ffd27148849711"
+  },
+  "cohort_summary": {
+    "full_corpus_n338": {
+      "total_queries": 338,
+      "stratification": {
+        "document_requirement": 69,
+        "workflow": 108,
+        "decision_gateway": 80,
+        "hybrid": 81
+      }
+    },
+    "primary_n70": {
+      "total_queries": 70,
+      "total_evaluations": 350,
+      "stratification": {
+        "document_requirement": 18,
+        "workflow": 18,
+        "decision_gateway": 17,
+        "hybrid": 17
+      }
+    },
+    "procedural_n60": {
+      "total_queries": 60,
+      "disjoint_with_primary": true,
+      "stratification": {
+        "workflow": 20,
+        "decision_gateway": 20,
+        "hybrid": 20
+      }
+    },
+    "ablation_n20": {
+      "total_queries": 20,
+      "stratification": {
+        "document_requirement": 5,
+        "workflow": 5,
+        "decision_gateway": 5,
+        "hybrid": 5
+      }
+    },
+    "cross_backbone_n34": {
+      "total_evaluations": 34,
+      "unique_queries": 7,
+      "stratification": {
+        "document_requirement": 4,
+        "workflow": 1,
+        "decision_gateway": 1,
+        "hybrid": 1
+      }
+    }
+  },
+  "reproducibility_verifications": {
+    "dataset_unique_ids": 338,
+    "dataset_null_fields": 0,
+    "primary_procedural_disjointness": true,
+    "sa_f1_historical_replication_max_diff": 0.0,
+    "unit_tests_passing": "48/48 (100%)"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "experiment": {
+    "title": "Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning",
+    "manuscript_target": "Knowledge-Based Systems (Elsevier)",
+    "domain_scope": "Institutional Governance and Process Intelligence (ICICOS SOP & BPMN)",
+    "version": "2.0.0-reproducible",
+    "git_commit_sha": "4defd04678f66ea64f674ea0bf107fc7f907edc3",
+    "sampling_seed": 42,
+    "bootstrap_seed": 42
+  },
+  "models": {
+    "primary_backbone": {
+      "role": "Generation and Routing",
+      "provider": "Google AI Studio",
+      "api_version": "Generative Language API v1beta",
+      "model_identifier": "gemini-3.5-flash-lite",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "top_k": null,
+      "timeout_seconds": 60,
+      "max_retries": 2,
+      "seed_support": {
+        "supported_by_api": false,
+        "supported_by_langchain_wrapper": false,
+        "deterministic_claim": "Greedy sampling at T=0.0; bitwise reproducibility is not guaranteed due to distributed GPU/TPU kernels"
+      }
+    },
+    "cross_backbone_diagnostic": {
+      "role": "Secondary Open-Weights Backbone Validation",
+      "provider": "Groq Cloud API",
+      "api_version": "v1 (api.groq.com/openai/v1)",
+      "model_identifier": "qwen/qwen3.8-27b",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "timeout_seconds": 60,
+      "max_retries": 2,
+      "rate_limit_policy": "Strict throttle (1000 OTPM on Groq on-demand tier)"
+    },
+    "critic_agent": {
+      "role": "Closed-Loop Verification and Self-Repair Triggering",
+      "provider": "Google AI Studio",
+      "model_identifier": "gemini-3.5-flash-lite",
+      "temperature": 0.0,
+      "confidence_threshold": 0.85,
+      "max_repair_iterations": 2,
+      "enforced_schema": "CriticDecision (JSON)",
+      "dimensions": [
+        "factual_grounding",
+        "domain_compliance",
+        "workflow_correctness",
+        "sop_correctness",
+        "answer_completeness"
+      ]
+    },
+    "embedding_engine": {
+      "primary_local": {
+        "framework": "sentence-transformers / PyTorch",
+        "model_identifier": "paraphrase-multilingual-MiniLM-L12-v2",
+        "dimension": 384,
+        "distance_metric": "cosine",
+        "device": "cpu"
+      },
+      "optional_cloud": {
+        "framework": "Google GenAI API",
+        "model_identifier": "models/text-embedding-004",
+        "dimension": 768
+      }
+    },
+    "evaluator": {
+      "framework": "Reconstructed Re-evaluator (Deterministic Heuristics + SentenceTransformer Cosine)",
+      "ragas_semantic_version": "0.4.3",
+      "metrics_engine": "evaluation/metrics/reconstructed_evaluator.py"
+    }
+  },
+  "retrieval_quotas": {
+    "llm_only": { "k_sop": 0, "k_bpmn": 0, "description": "Zero-shot parametric baseline" },
+    "traditional_rag": { "k_sop": 6, "k_bpmn": 0, "description": "ChromaDB dense semantic search" },
+    "graph_rag": { "k_sop": 0, "k_bpmn": 4, "description": "Directed BPMN AST 2-hop neighborhood traversal" },
+    "static_hybrid": { "k_sop": 5, "k_bpmn": 3, "description": "Fixed uniform concatenation" },
+    "proposed_agentic": {
+      "router_architecture": "Deterministic heuristic gate with LLM fallback",
+      "dynamic_quotas": {
+        "sop_dominant": { "k_sop": 6, "k_bpmn": 2 },
+        "bpmn_dominant": { "k_sop": 3, "k_bpmn": 4 },
+        "dual_hybrid": { "k_sop": 5, "k_bpmn": 3 }
+      }
+    }
+  },
+  "cohorts": {
+    "full_corpus_n338": {
+      "sample_size": 338,
+      "manifest_path": "ICICOS_ProcessQA_Dataset/cohorts/full_corpus_router_n338.csv",
+      "canonical_dataset_path": "ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json",
+      "category_stratification": {
+        "workflow": 108,
+        "hybrid": 81,
+        "decision_gateway": 80,
+        "document_requirement": 69
+      }
+    },
+    "primary_n70": {
+      "sample_size": 70,
+      "total_evaluations": 350,
+      "manifest_path": "ICICOS_ProcessQA_Dataset/cohorts/primary_n70.csv",
+      "selection_procedure": "First 70 queries from seed-42 stratified sampling manifest results/primary_benchmark_manifest.json",
+      "category_stratification": {
+        "document_requirement": 18,
+        "workflow": 18,
+        "decision_gateway": 17,
+        "hybrid": 17
+      }
+    },
+    "procedural_diagnostic_n60": {
+      "sample_size": 60,
+      "manifest_path": "ICICOS_ProcessQA_Dataset/cohorts/procedural_n60.csv",
+      "disjoint_with_primary_n70": true,
+      "category_stratification": {
+        "workflow": 20,
+        "decision_gateway": 20,
+        "hybrid": 20
+      }
+    },
+    "ablation_diagnostic_n20": {
+      "sample_size": 20,
+      "manifest_path": "ICICOS_ProcessQA_Dataset/cohorts/ablation_n20.csv",
+      "category_stratification": {
+        "document_requirement": 5,
+        "workflow": 5,
+        "decision_gateway": 5,
+        "hybrid": 5
+      }
+    },
+    "cross_backbone_diagnostic": {
+      "total_evaluations": 34,
+      "unique_queries": 7,
+      "manifest_path": "ICICOS_ProcessQA_Dataset/cohorts/cross_backbone_evaluations_n34.csv",
+      "category_stratification": {
+        "document_requirement": 4,
+        "workflow": 1,
+        "decision_gateway": 1,
+        "hybrid": 1
+      }
+    }
+  }
+}

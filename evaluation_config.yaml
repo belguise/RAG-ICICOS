@@ -1,18 +1,21 @@
 # ==============================================================================
-# ICICoS Agentic Hybrid RAG: Official Evaluation & Reproducibility Configuration
-# Formatted for IEEE Transactions (TKDE) / ACM TOIS Publication Standards
+# ICICOS Agentic Hybrid RAG: Official Evaluation & Reproducibility Configuration
+# Reconciled for Elsevier Knowledge-Based Systems (Q1) Publication Standards
 # ==============================================================================
 
 experiment:
   title: "Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning"
-  manuscript_target: "IEEE TKDE / ACM TOIS"
-  domain_scope: "ICICoS Enterprise Workflow Intelligence"
-  version: "1.0.0"
-  random_seed: 42
+  manuscript_target: "Knowledge-Based Systems (Elsevier)"
+  domain_scope: "Institutional Governance and Process Intelligence (ICICOS SOP & BPMN)"
+  version: "2.0.0"
+  git_commit_sha: "4defd04678f66ea64f674ea0bf107fc7f907edc3"
+  sampling_seed: 42
+  bootstrap_seed: 42
 
 dataset:
-  name: "ICICoS ProcessQA"
-  path: "evaluation/dataset/icicos_process_qa.json"
+  name: "ICICOS ProcessQA"
+  canonical_json: "ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json"
+  canonical_csv: "ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.csv"
   total_queries: 338
   stratification:
     workflow: 108
@@ -29,24 +32,64 @@ dataset:
     - expected_answer
     - expected_bpmn_path
 
+cohorts:
+  primary_benchmark:
+    sample_size: 70
+    total_executions: 350
+    manifest_csv: "ICICOS_ProcessQA_Dataset/cohorts/primary_n70.csv"
+    stratification: { document_requirement: 18, workflow: 18, decision_gateway: 17, hybrid: 17 }
+  procedural_diagnostic:
+    sample_size: 60
+    manifest_csv: "ICICOS_ProcessQA_Dataset/cohorts/procedural_n60.csv"
+    disjoint_with_primary: true
+    stratification: { workflow: 20, decision_gateway: 20, hybrid: 20 }
+  ablation_diagnostic:
+    sample_size: 20
+    manifest_csv: "ICICOS_ProcessQA_Dataset/cohorts/ablation_n20.csv"
+    stratification: { document_requirement: 5, workflow: 5, decision_gateway: 5, hybrid: 5 }
+  cross_backbone_diagnostic:
+    unique_queries: 7
+    total_executions: 34
+    manifest_csv: "ICICOS_ProcessQA_Dataset/cohorts/cross_backbone_evaluations_n34.csv"
+    stratification: { document_requirement: 4, workflow: 1, decision_gateway: 1, hybrid: 1 }
+
 models:
-  generation:
-    provider: "Google Gemini"
-    model_name: "gemini-1.5-flash"
+  primary_generation:
+    provider: "Google AI Studio"
+    model_name: "gemini-3.5-flash-lite"
     temperature: 0.0
-    top_p: 0.95
-    max_output_tokens: 1024
+    top_p: 1.0
+    timeout_seconds: 60
+    max_retries: 2
+    seed_support: false
     system_instruction: "Zero-hallucination deterministic procedural question answering"
   
-  evaluator:
-    framework: "RAGAS"
-    ragas_version: "0.4.3"
-    judge_llm: "gemini-1.5-flash"
-    judge_temperature: 0.0
-    judge_max_retries: 3
-    embedding_model: "paraphrase-multilingual-MiniLM-L12-v2"
+  cross_backbone:
+    provider: "Groq Cloud API"
+    model_name: "qwen/qwen3.8-27b"
+    temperature: 0.0
+    top_p: 1.0
+    timeout_seconds: 60
+    max_retries: 2
+
+  critic_agent:
+    provider: "Google AI Studio"
+    model_name: "gemini-3.5-flash-lite"
+    temperature: 0.0
+    confidence_threshold: 0.85
+    max_repair_iterations: 2
+    dimensions:
+      - "factual_grounding"
+      - "domain_compliance"
+      - "workflow_correctness"
+      - "sop_correctness"
+      - "answer_completeness"
+
+  embeddings:
+    provider: "sentence-transformers"
+    model_name: "paraphrase-multilingual-MiniLM-L12-v2"
     embedding_dim: 384
-    batch_size: 10
+    distance_metric: "cosine"
 
 retrieval_budgets:
   llm_only:
@@ -64,7 +107,7 @@ retrieval_budgets:
   graph_rag:
     k_sop: 0
     k_bpmn: 4
-    retriever: "NetworkX Subgraph Neighborhood Expansion"
+    retriever: "Directed BPMN 2-hop Subgraph Neighborhood Traversal"
     expansion_hops: 2
   
   static_hybrid:
@@ -74,7 +117,7 @@ retrieval_budgets:
     max_chunks: 8
   
   proposed_agentic:
-    router_type: "Adaptive Gating Network (Mixture-of-Retrievers)"
+    router_type: "Adaptive Gating Network (Intent-Conditioned Router)"
     max_total_chunks: 8
     dynamic_quotas:
       sop_dominant: { k_sop: 6, k_bpmn: 2 }
@@ -82,23 +125,22 @@ retrieval_budgets:
       dual_hybrid: { k_sop: 5, k_bpmn: 3 }
 
 evaluation_metrics:
-  primary_ragas:
+  primary:
     - name: "Faithfulness"
-      formulation: "NLI-based atomic claim verification against retrieved premises"
+      formulation: "Sentence-level premise entailment against retrieved context"
       range: [0.0, 1.0]
-      direction: "maximize"
     - name: "Answer_Relevancy"
-      formulation: "Semantic intent responsiveness via synthetic reverse-query cosine similarity"
+      formulation: "Intent keyword coverage and reverse query similarity"
       range: [0.0, 1.0]
-      direction: "maximize"
     - name: "Context_Precision"
       formulation: "Mean Average Precision at rank k (MAP@k) for retrieved chunks"
       range: [0.0, 1.0]
-      direction: "maximize"
     - name: "Context_Recall"
-      formulation: "Proportion of ground-truth reference propositions captured in context"
+      formulation: "Ground-truth proposition coverage by retrieved context"
       range: [0.0, 1.0]
-      direction: "maximize"
+    - name: "SA-F1"
+      formulation: "Semantic Agreement F1 using multilingual sentence embeddings"
+      range: [0.0, 1.0]
   
   bpmn_procedural:
     - name: "Process_Path_Accuracy"
@@ -108,6 +150,7 @@ evaluation_metrics:
     - name: "Gateway_Decision_Accuracy"
       abbreviation: "GDA"
       formulation: "XOR/OR conditional branch trigger identification and target resolution"
+      threshold: 0.40
       range: [0.0, 1.0]
     - name: "Actor_Attribution_Accuracy"
       abbreviation: "AAA"
@@ -116,16 +159,12 @@ evaluation_metrics:
 
 statistical_validation:
   unit_of_analysis: "query-level paired comparison"
-  sample_size: 338
-  degrees_of_freedom: 337
+  primary_sample_size: 70
+  primary_degrees_of_freedom: 69
   normality_test: "Shapiro-Wilk (alpha = 0.05)"
   parametric_test: "Paired Student's t-test (two-tailed)"
   non_parametric_test: "Wilcoxon signed-rank test (two-tailed)"
-  effect_size: "Cohen's d (paired formulation)"
+  bootstrap_resamples: 10000
+  bootstrap_seed: 42
+  effect_size: "Cohen's d_z (paired formulation)"
   confidence_interval: "95% CI"
-
-hardware_environment:
-  cpu: "AMD Ryzen 7 5800H with Radeon Graphics (8 cores, 16 threads, 3.20 GHz)"
-  ram: "16.0 GB DDR4"
-  os: "Microsoft Windows 11 Enterprise (64-bit)"
-  python_version: "3.11"

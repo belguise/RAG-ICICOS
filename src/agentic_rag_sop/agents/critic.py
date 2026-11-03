@@ -3,23 +3,40 @@ Critic Verification Agent.
 Phase 5: Evaluates generated answers for factual grounding, strict ICICoS domain
 compliance, BPMN workflow consistency, and SOP requirement accuracy.
 Triggers an iterative revision loop when hallucinations or invalid claims are detected.
+
+Guarantees:
+- Strict verification statuses: VERIFIED, REJECTED, UNVERIFIED, VERIFICATION_ERROR.
+- Fail-safe exception handling: Errors NEVER falsely pass or return is_valid=True.
+- Full 5-dimensional compliance auditing (Factual, Domain, Workflow, SOP, Completeness).
 """
 
-import json
-import re
 from enum import Enum
+import json
+import logging
+import re
+import traceback
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
 from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import PromptTemplate
+from pydantic import BaseModel, Field
 
 from agentic_rag_sop.core.llm import get_llm
+
+logger = logging.getLogger("CriticVerificationAgent")
 
 
 class CheckStatus(str, Enum):
     PASSED = "PASSED"
     FAILED = "FAILED"
     NOT_APPLICABLE = "NOT_APPLICABLE"
+
+
+class VerificationStatus(str, Enum):
+    """Explicit system verification status reflecting the state of audit."""
+    VERIFIED = "VERIFIED"                     # All 5 dimensions passed with high confidence
+    REJECTED = "REJECTED"                     # One or more checks failed; actionable critique provided
+    UNVERIFIED = "UNVERIFIED"                 # Reached max repair attempts without satisfying critic
+    VERIFICATION_ERROR = "VERIFICATION_ERROR" # Infrastructure/LLM error occurred; answer uncertified
 
 
 class CriticCheckItem(BaseModel):
@@ -31,8 +48,12 @@ class CriticCheckItem(BaseModel):
 
 class CriticDecision(BaseModel):
     """Structured decision output produced by CriticVerificationAgent."""
+    verification_status: VerificationStatus = Field(
+        default=VerificationStatus.REJECTED,
+        description="Explicit system verification status (VERIFIED, REJECTED, UNVERIFIED, VERIFICATION_ERROR)"
+    )
     is_valid: bool = Field(
-        description="True if all critical checks passed and no hallucination is present"
+        description="True strictly if verification_status is VERIFIED and all critical checks passed"
     )
     confidence_score: float = Field(
         ge=0.0, le=1.0,
@@ -61,6 +82,14 @@ class CriticDecision(BaseModel):
         default=None,
         description="Concrete, actionable correction instructions if is_valid is False"
     )
+    failed_checks: List[str] = Field(
+        default_factory=list,
+        description="List of verification dimension names that failed evaluation"
+    )
+    metadata: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Diagnostic execution metadata"
+    )
 
 
 CRITIC_PROMPT = """Anda adalah CRITIC VERIFICATION AGENT untuk sistem manajemen pengetahuan operasional konferensi ICICoS (IEEE International Conference on Information Technology and Computer Science).
@@ -81,7 +110,7 @@ KRITERIA EVALUASI:
    - Jika pertanyaan/jawaban menyangkut alur proses, periksa:
      * Aktor penanggung jawab pada setiap langkah (apakah tepat sesuai konteks).
      * Urutan kronologis langkah-langkah proses.
-     * Logika percabangan keputusan / gateway (misal: jika disetujui vs jika ditolak).
+     * Logika percabangan keputusan / gateway (misal: jika disetujui vs jika ditolak/tidak lengkap).
    - Tolak (FAILED) jika aktor tertukar, urutan proses terbalik, atau cabang gateway salah.
 
 4. SOP CORRECTNESS (Syarat Dokumen & Finansial):
@@ -157,22 +186,61 @@ class CriticVerificationAgent:
 
     def _fast_deterministic_check(
         self,
-        answer: str,
+        answer: Optional[str],
         fused_context: Any,
-        question: str,
+        question: Optional[str],
     ) -> Optional[CriticDecision]:
         """
-        Fast heuristic rules to catch immediate domain violations (e.g. SK Dekan intrusion)
-        and detect false refusal when retrieved context actually contains answer evidence.
+        Fast heuristic checks to catch immediate boundary violations, empty text,
+        domain intrusion (e.g. SK Dekan), and false refusals.
         """
-        ans_lower = answer.lower()
-        context_str = str(fused_context)
+        # 1. Empty Answer Check
+        if not answer or not isinstance(answer, str) or not answer.strip():
+            return CriticDecision(
+                verification_status=VerificationStatus.REJECTED,
+                is_valid=False,
+                confidence_score=0.0,
+                factual_grounding=CriticCheckItem(
+                    status=CheckStatus.FAILED,
+                    reason="Jawaban kosong atau tidak valid.",
+                ),
+                domain_compliance=CriticCheckItem(status=CheckStatus.FAILED, reason="Jawaban kosong."),
+                workflow_correctness=CriticCheckItem(status=CheckStatus.FAILED, reason="Jawaban kosong."),
+                sop_correctness=CriticCheckItem(status=CheckStatus.FAILED, reason="Jawaban kosong."),
+                answer_completeness=CriticCheckItem(status=CheckStatus.FAILED, reason="Jawaban kosong."),
+                critique_summary="Penolakan instan: Draf jawaban kosong.",
+                suggested_revision_instructions="Hasilkan jawaban substantif berdasarkan konteks yang tersedia.",
+                failed_checks=["factual_grounding", "domain_compliance", "workflow_correctness", "sop_correctness", "answer_completeness"],
+            )
 
-        # 1. Immediate domain violation check: Generic university bureaucracy not present in context
+        # 2. Empty Context Check
+        context_str = str(fused_context) if fused_context else ""
+        if not context_str.strip() or "Tidak ada konteks dokumen" in context_str:
+            return CriticDecision(
+                verification_status=VerificationStatus.REJECTED,
+                is_valid=False,
+                confidence_score=0.0,
+                factual_grounding=CriticCheckItem(
+                    status=CheckStatus.FAILED,
+                    reason="Tidak ada konteks eksternal yang tersedia untuk memverifikasi klaim (zero context).",
+                ),
+                domain_compliance=CriticCheckItem(status=CheckStatus.PASSED, reason="Konteks kosong."),
+                workflow_correctness=CriticCheckItem(status=CheckStatus.PASSED, reason="Konteks kosong."),
+                sop_correctness=CriticCheckItem(status=CheckStatus.PASSED, reason="Konteks kosong."),
+                answer_completeness=CriticCheckItem(status=CheckStatus.FAILED, reason="Konteks tidak memuat bukti."),
+                critique_summary="Penolakan instan: Konteks pengetahuan kosong sehingga jawaban tidak dapat diground.",
+                suggested_revision_instructions="Tunjukkan bahwa bukti tidak tersedia pada pangkalan data operasional.",
+                failed_checks=["factual_grounding", "answer_completeness"],
+            )
+
+        ans_lower = answer.lower()
+
+        # 3. Immediate Domain Violation Check: Generic campus bureaucracy not in ICICoS scope
         forbidden_domain_markers = ["sk dekan", "senat fakultas", "senat akademik", "biro rektorat", "rektor unpad", "dekanat"]
         for marker in forbidden_domain_markers:
             if marker in ans_lower:
                 return CriticDecision(
+                    verification_status=VerificationStatus.REJECTED,
                     is_valid=False,
                     confidence_score=0.20,
                     factual_grounding=CriticCheckItem(
@@ -195,20 +263,23 @@ class CriticVerificationAgent:
                         f"Hapus seluruh rujukan ke '{marker}'. Fokus hanya pada kepanitiaan operasional ICICoS "
                         "(Author, Bendahara, Sekretaris, Ketua Panitia) sebagaimana tercantum dalam konteks."
                     ),
+                    failed_checks=["factual_grounding", "domain_compliance", "workflow_correctness"],
                 )
 
-        # 2. Immediate false refusal check: draft answer claims information is missing when context exists
+        # 4. Immediate False Refusal Check
         refusal_patterns = [
             "tidak tercantum", "tidak ditemukan", "tidak terdapat",
             "tidak tersedia", "tidak disebutkan", "informasi tidak ada",
             "tidak ada informasi", "tidak memiliki informasi", "tidak memuat informasi",
         ]
         if any(p in ans_lower for p in refusal_patterns) and len(context_str.strip()) > 150:
-            q_words = set(re.findall(r"\w{4,}", question.lower()))
+            q_clean = question or ""
+            q_words = set(re.findall(r"\w{4,}", q_clean.lower()))
             ctx_lower = context_str.lower()
             overlap = [w for w in q_words if w in ctx_lower]
             if len(overlap) >= 1:
                 return CriticDecision(
+                    verification_status=VerificationStatus.REJECTED,
                     is_valid=False,
                     confidence_score=0.25,
                     factual_grounding=CriticCheckItem(
@@ -229,6 +300,7 @@ class CriticVerificationAgent:
                         "Jangan menolak menjawab atau menyatakan informasi tidak ada. Ekstrak fakta, alur proses, peran/aktor, "
                         "dan persyaratan dokumen dari teks konteks di atas secara lengkap dan jawab pertanyaan secara langsung."
                     ),
+                    failed_checks=["factual_grounding", "answer_completeness"],
                 )
 
         return None
@@ -241,7 +313,7 @@ class CriticVerificationAgent:
     ) -> CriticDecision:
         """
         Audit the draft answer against the provided context and question.
-        Returns a structured CriticDecision.
+        Returns a structured CriticDecision with explicit VerificationStatus.
         """
         # 1. Fast deterministic check
         fast_check = self._fast_deterministic_check(answer, context, question)
@@ -255,11 +327,16 @@ class CriticVerificationAgent:
                 "question": question,
                 "answer": answer,
             })
-            content = response.content if hasattr(response, "content") else str(response)
+            if hasattr(response, "content") and not isinstance(response.content, (re.Pattern, type(re))):
+                content = response.content
+            else:
+                content = str(response)
 
             if isinstance(content, list):
                 text_parts = [item.get("text", "") if isinstance(item, dict) else str(item) for item in content]
                 content = " ".join(text_parts)
+            elif not isinstance(content, str):
+                content = str(content)
 
             json_match = re.search(r"\{.*\}", content, re.DOTALL)
             if json_match:
@@ -269,28 +346,47 @@ class CriticVerificationAgent:
 
             decision = CriticDecision.model_validate(data)
 
-            # Enforce safety constraint: if any critical check failed, is_valid must be False
-            if (
-                decision.factual_grounding.status == CheckStatus.FAILED
-                or decision.domain_compliance.status == CheckStatus.FAILED
-                or decision.workflow_correctness.status == CheckStatus.FAILED
-                or decision.sop_correctness.status == CheckStatus.FAILED
-                or (hasattr(decision, "answer_completeness") and decision.answer_completeness.status == CheckStatus.FAILED)
-            ):
+            # Determine failed checks across all 5 verification dimensions
+            failed_dims: List[str] = []
+            for dim_name, check_item in [
+                ("factual_grounding", decision.factual_grounding),
+                ("domain_compliance", decision.domain_compliance),
+                ("workflow_correctness", decision.workflow_correctness),
+                ("sop_correctness", decision.sop_correctness),
+                ("answer_completeness", decision.answer_completeness),
+            ]:
+                if check_item.status == CheckStatus.FAILED:
+                    failed_dims.append(dim_name)
+
+            decision.failed_checks = failed_dims
+
+            # Strict Safety Gate: is_valid is True ONLY if NO dimension failed
+            if failed_dims:
                 decision.is_valid = False
+                decision.verification_status = VerificationStatus.REJECTED
+            else:
+                decision.is_valid = True
+                decision.verification_status = VerificationStatus.VERIFIED
 
             return decision
 
         except Exception as e:
-            # Resilient fallback: if JSON parsing or LLM fails, assume valid with moderate confidence
+            logger.error(f"Error during Critic verification: {str(e)}\n{traceback.format_exc()}")
+            # Fail-Safe Error Handling: NEVER mark as valid or verified on error
             return CriticDecision(
-                is_valid=True,
-                confidence_score=0.80,
-                factual_grounding=CriticCheckItem(status=CheckStatus.PASSED, reason="Fallback passed"),
-                domain_compliance=CriticCheckItem(status=CheckStatus.PASSED, reason="Fallback passed"),
-                workflow_correctness=CriticCheckItem(status=CheckStatus.PASSED, reason="Fallback passed"),
-                sop_correctness=CriticCheckItem(status=CheckStatus.PASSED, reason="Fallback passed"),
-                answer_completeness=CriticCheckItem(status=CheckStatus.PASSED, reason="Fallback passed"),
-                critique_summary=f"Audit completed via resilient fallback: {str(e)}",
+                verification_status=VerificationStatus.VERIFICATION_ERROR,
+                is_valid=False,
+                confidence_score=0.0,
+                factual_grounding=CriticCheckItem(
+                    status=CheckStatus.FAILED,
+                    reason=f"Audit failed due to exception: {type(e).__name__}: {str(e)}",
+                ),
+                domain_compliance=CriticCheckItem(status=CheckStatus.FAILED, reason="Audit incomplete due to error."),
+                workflow_correctness=CriticCheckItem(status=CheckStatus.FAILED, reason="Audit incomplete due to error."),
+                sop_correctness=CriticCheckItem(status=CheckStatus.FAILED, reason="Audit incomplete due to error."),
+                answer_completeness=CriticCheckItem(status=CheckStatus.FAILED, reason="Audit incomplete due to error."),
+                critique_summary=f"Critic verification raised an infrastructure error: {str(e)}",
                 suggested_revision_instructions=None,
+                failed_checks=["factual_grounding", "domain_compliance", "workflow_correctness", "sop_correctness", "answer_completeness"],
+                metadata={"error": str(e), "error_type": type(e).__name__},
             )
