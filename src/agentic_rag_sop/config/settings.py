@@ -55,10 +55,22 @@ class Settings(BaseSettings):
     MAX_REPAIR_ITERATIONS: int = 2
     CRITIC_CONFIDENCE_THRESHOLD: float = 0.85
 
-    # Phase 7 Backend API & Database Settings
+    # Phase 7 Backend API & Security Settings
     DATABASE_URL: str = "sqlite:///./data/icicos_rag.db"
     API_PORT: int = 8000
-    API_HOST: str = "0.0.0.0"
+    API_HOST: str = "127.0.0.1"
+
+    # CORS Security Configuration
+    CORS_ALLOWED_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+    CORS_ALLOW_CREDENTIALS: bool = True
+    CORS_ALLOW_METHODS: list[str] = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    CORS_ALLOW_HEADERS: list[str] = ["*"]
+    CORS_ORIGIN_REGEX: str | None = r"^https:\/\/(rag-icicos|icicos(-[a-z0-9]+)*)\.vercel\.app$"
 
     @property
     def google_api_key(self) -> str:

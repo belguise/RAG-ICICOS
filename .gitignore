@@ -34,6 +34,9 @@ figures/
 docs/
 tools/
 scripts/
+!scripts/
+scripts/*
+!scripts/verify_research_release.py
 AUDIT/
 AUDIT_REPORT.md
 AUDIT_CODE_AND_EXPERIMENTS.md
@@ -60,6 +63,12 @@ evaluation/archive/
 # Research Outputs, Raw Results, Logs & Checkpoints
 # ==============================================================================
 results/
+!results/
+results/*
+!results/master_results.csv
+!results/statistical_tests.csv
+!results/final_comparison_table.csv
+results/iso_compute_experiment/
 evaluation/results/
 outputs/
 output/
@@ -90,6 +99,11 @@ evaluation/dataset/icicos_process_qa.json
 # ==============================================================================
 *.db
 *.sqlite3
+chroma/
+chroma_db/
+vector_store/
+data/vector_store/
+.chroma/
 
 # ==============================================================================
 # Notebooks & Exploratory Artifacts

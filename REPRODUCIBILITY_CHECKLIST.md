@@ -1,7 +1,7 @@
 # RESEARCH REPRODUCIBILITY CHECKLIST
 
 **Target Publication:** *Knowledge-Based Systems* (Elsevier, Q1)  
-**Manuscript Title:** ICICOS: An Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering  
+**Manuscript Title:** Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering  
 **Evaluation Standard:** ACM Artifact Review and Badging / Elsevier Reproducibility Guidelines  
 **Audited Commit SHA:** `4defd04678f66ea64f674ea0bf107fc7f907edc3`  
 **Audit Completion Date:** November 3, 2026  

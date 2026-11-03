@@ -1,3 +1,11 @@
+# ==============================================================================
+# ICICOS ProcessQA Benchmark Dataset & Evaluation Cryptographic Manifest
+# Algorithm: SHA-256
+# Verified Date: November 3, 2026
+# Target Venue: Elsevier Knowledge-Based Systems (KBS)
+# ==============================================================================
+
+# Section 1: Benchmark Dataset & Cohort Manifests (Zenodo Release Matched)
 3ff56beac177b42706e34abac269d58ce4f0ef4af699cad47a6e71c1aecc356a  ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json
 5cef9731f7a768c8cf1f78575d38f1485166213d8395f2a33979c74cbe2fba3b  ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.csv
 29c943a6e75d136625f93a81b82989c168a02ffee12a5778c366d1d70343049d  ICICOS_ProcessQA_Dataset/cohorts/primary_n70.csv
@@ -5,6 +13,8 @@
 1c91a12148cb7c184bce1521f4f7b852a62c9346bbe56e47fc67c5db136c6f2e  ICICOS_ProcessQA_Dataset/cohorts/ablation_n20.csv
 3efc4d09e2d34d42d6193b7192361a79b08aa34268fda68cc4ec47a7a05ab8ba  ICICOS_ProcessQA_Dataset/cohorts/cross_backbone_evaluations_n34.csv
 1a7511b310c2b15a4dc9ec42abecfb18b4bf952381e2b8b34dc396c910f76cb7  ICICOS_ProcessQA_Dataset/cohorts/full_corpus_router_n338.csv
+
+# Section 2: Experimental Output Logs & Master Results
 d848f2548b3da31e67a6b0e6862c85a3631047ff2e8d22309f0c54ad2420aa9f  results/primary_benchmark_manifest.json
 186f10766eeb2d6be175ab72bb0fd91ee712ff18b8bbb65edcabab518f6bf6ff  results/sampling_manifest.json
 fbcc8b50e5514ee097d4f9dd9632dd2d4a57d73f0c8b76a670219aae13ebbbf6  results/master_results.csv
@@ -12,6 +22,8 @@ fbcc8b50e5514ee097d4f9dd9632dd2d4a57d73f0c8b76a670219aae13ebbbf6  results/master
 49e87222ea1d69c66ea6b7af6d554a06a23a8f15ad96a7927dd172221f1d67b1  results/benchmark_results_primary_qwen.json
 68479d67ce93327bfa503a52fab81087163012940902d6913ccf0f3c52e22674  results/failed_queries.json
 1c709b33f37ff5a732cf54194322c5e3587845a72744a579c0bbe85cb7d23506  results/execution_log.json
-8f59dacdce5f9b3a6ad883f51971db62545a015942bd7b2014c31170496eebc0  evaluation_config.yaml
-ccba0773e2823b744829df2f8594240dceb5b805178911c604a69f863b638891  pyproject.toml
-0b87f49b479fd38cb6e436a1b98f2d35ba7e1a011c3ae91efe0c5e527612923d  requirements.txt
+
+# Section 3: Pinned Environment & Evaluation Configurations
+a5d2934593da1629d1f1809328c58bdd3a69da38f92ee440a7230fc688a6a0e9  evaluation_config.yaml
+aa3b779b262881c4486096c44740869068f8f69815fdd5d8e20f34b58ec61a04  pyproject.toml
+6653a32d19a2294b5c3e97252fb3a8edead6adfc9a09bd20427c59990c9bbc18  requirements.txt

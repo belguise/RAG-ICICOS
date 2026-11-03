@@ -4,7 +4,7 @@
   "git_commit_sha": "4defd04678f66ea64f674ea0bf107fc7f907edc3",
   "timestamp_utc": "2026-11-02T18:50:42.746775+00:00",
   "target_journal": "Knowledge-Based Systems (Elsevier)",
-  "manuscript_title": "ICICOS: An Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering",
+  "manuscript_title": "Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering",
   "hardware_environment": {
     "os": "Windows 10 (64bit)",
     "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
