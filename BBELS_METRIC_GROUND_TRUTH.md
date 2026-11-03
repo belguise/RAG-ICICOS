@@ -9,10 +9,13 @@
 
 ### 1. Architectural Call Chain & Implementation Map
 
+> **Deterministic Offline Evaluation Note:** All metrics documented below operate strictly as deterministic offline evaluations over pre-recorded model outputs and retrieved context traces stored in 
+esults/master_results.csv. Verification procedures never execute live LLM calls, ensuring absolute numerical reproducibility across independent environments without external API costs or model endpoint drift.
+
 All evaluation metrics reported in the KBS manuscript and primary benchmark results (`results/master_results.csv`) are implemented in:
-- Primary Engine: [`evaluation/metrics/reconstructed_evaluator.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/reconstructed_evaluator.py)
-- Standalone Verification Harness: [`evaluation/metrics/standard_rag_metrics.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py)
-- Statistical Test Harness: [`evaluation/statistical_analysis.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/statistical_analysis.py)
+- Primary Engine: [`evaluation/metrics/reconstructed_evaluator.py`](evaluation/metrics/reconstructed_evaluator.py)
+- Standalone Verification Harness: [`evaluation/metrics/standard_rag_metrics.py`](evaluation/metrics/standard_rag_metrics.py)
+- Statistical Test Harness: [`evaluation/statistical_analysis.py`](evaluation/statistical_analysis.py)
 
 ```
 [ Model Generation Output (Answer A, Context C, Query Q) ]

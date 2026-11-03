@@ -10,7 +10,7 @@
     "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
     "python_version": "3.11.9",
     "python_compiler": "MSC v.1938 64 bit (AMD64)",
-    "active_venv": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python311"
+    "active_venv": "%LOCALAPPDATA%/Programs/Python/Python311"
   },
   "dependency_freeze_hash": {
     "environment_lock": "9d4b961ce9691566fb6bf02f4e7e948517432efc6cf162f1933d9011c1b40cd7",

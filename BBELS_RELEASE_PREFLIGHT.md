@@ -36,7 +36,7 @@
 ## 2. RECOVERABLE EXTERNAL BACKUP CONFIRMATION
 
 In compliance with Phase A non-negotiable safety rules:
-- **Backup Location Outside Repository:** `C:\FILE LINATNG\BACKUP_RAG_BELAJAR_RELEASE_20261104`
+- **Backup Location Outside Repository:** `../BACKUP_RAG_BELAJAR_RELEASE_20261104`
 - **Full Git Bundle:** `repo_bundle_all_refs.bundle` (`2,395,796` bytes) containing all branches, tags, and committed historical objects.
 - **Working Tree Patch:** `git_diff_pre_release.patch` (`27,646` bytes) preserving exact uncommitted state.
 - **Status Log:** `git_status_pre_release.txt` (`4,422` bytes).

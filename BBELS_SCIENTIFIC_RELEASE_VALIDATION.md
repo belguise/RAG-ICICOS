@@ -15,16 +15,56 @@
 The primary empirical benchmark underlying all published results was executed under standardized, deterministic pipeline conditions:
 - **Primary Experiment Identifier:** `EXP_PRIMARY_GEMINI_20261006_162813`
 - **Execution Timestamp:** October 6, 2026, 16:28:13 UTC
-- **Raw Execution Traces:** [`results/benchmark_results_primary_gemini.json`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/benchmark_results_primary_gemini.json) (`884,883` bytes, SHA-256: `79BEE445C3A46C4EF1080AA977C018AB04A3DFBBEC960447998B92400A0E09F2`)
-- **Primary Tabular Records:** [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv) (`45,605` bytes, SHA-256: `FBCC8B50E5514EE097D4F9DD9632DD2D4A57D73F0C8B76A670219AAE13EBBBF6`)
-- **LLM Backbone:** Google Gemini 3.5 Flash-Lite (`gemini-1.5-flash` model endpoint)
-- **Decoding Configuration:** Greedy decoding ($T = 0.0$, top-p $1.0$, random seed $42$)
-- **Context Construction:** Dual-modal context fusion structuring retrieved SOP policy clauses alongside BPMN process execution traces (`src/agentic_rag_sop/fusion/context_fusion.py`)
-- **Verification Constraints:** Closed-loop schema-constrained Critic verification with hard bounded self-repair ceiling $N_{\text{max\_repair}} = 2$ (`src/agentic_rag_sop/agents/critic.py`)
+- **Raw Execution Traces:** [`results/benchmark_results_primary_gemini.json`](results/benchmark_results_primary_gemini.json) (`884,883` bytes, SHA-256: `79BEE445C3A46C4EF1080AA977C018AB04A3DFBBEC960447998B92400A0E09F2`)
+- **Primary Tabular Records:** [`results/master_results.csv`](results/master_results.csv) (`45,605` bytes, SHA-256: `FBCC8B50E5514EE097D4F9DD9632DD2D4A57D73F0C8B76A670219AAE13EBBBF6`)
+- **LLM Backbone (Historical Verification):** Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, via Google Generative Language API v1beta / Google AI Studio).
+  - *Provenance Audit & Clarification:* The underlying raw benchmark execution trace (`results/benchmark_results_primary_gemini.json`, run `EXP_PRIMARY_GEMINI_20261006_162813`) logs `"backbone": "gemini"`. The corresponding runtime settings (`src/agentic_rag_sop/config/settings.py`), experiment specification (`evaluation/experiment_config.json`), metadata manifest (`evaluation/reproducibility_run_metadata.json`), and manuscript specify `gemini-3.5-flash-lite`. The colloquial mention of `gemini-1.5-flash` in earlier informal auditor notes was an unverified auditor gloss and is formally retracted. No `gemini-1.5-flash` API endpoint was invoked for the authoritative primary benchmark.
+- **Decoding Configuration & Role of Seed 42:**
+  - *Model Inference Decoding:* Greedy sampling ($T = 0.0$, $\text{top-}p = 1.0$) was enforced across all model calls to achieve algorithmically deterministic, lowest-entropy completions.
+  - *Seed Support Boundary:* As explicitly documented in `evaluation/experiment_config.json` (`"seed_support": {"supported_by_api": false, "supported_by_langchain_wrapper": false}`), the Google Generative Language API does not provide bitwise generation determinism via API seeds across distributed TPU/GPU hardware clusters.
+  - *Authentic Role of Seed 42:* Random seed `42` is strictly employed for:
+    1. Stratified dataset cohort sampling and manifest generation (`evaluation/experiments/sample_manifest.py`).
+    2. Non-parametric paired bootstrap resampling across $B = 10,000$ iterations (`evaluation/statistical_analysis.py`).
+    3. Reproducible pseudorandom permutation generation in unit and synthetic test suites.
+- **Context Construction:** Dual-modal context fusion structuring retrieved SOP policy clauses alongside BPMN process execution traces (`src/agentic_rag_sop/fusion/context_fusion.py`).
+- **Verification Constraints:** Closed-loop schema-constrained Critic verification with hard bounded self-repair ceiling $N_{\text{max\_repair}} = 2$ (`src/agentic_rag_sop/agents/critic.py`).
 
 ---
 
-## 2. EXACT COHORT RECONCILIATION & ACCOUNTING (388 MASTER RECORDS)
+## 2. ROUTER ARCHITECTURE, OPERATIONAL INTENT CLASSES & RETRIEVAL ALLOCATION PROFILES
+
+In the ICICOS architecture (`src/agentic_rag_sop/agents/router.py`), queries undergo a two-stage routing decision: fast deterministic heuristic pre-filtering followed by schema-constrained LLM classification.
+
+### Four Operational Intent Classes
+1. `document_requirement`: Queries focusing on SOP checklists, mandatory documentation, and administrative prerequisites.
+2. `workflow`: Queries focusing on process execution order, activity sequences, and organizational handoffs between roles.
+3. `decision_gateway`: Queries evaluating conditional branch logic, evaluation criteria, and gateway outcomes (e.g., approval vs. rejection paths).
+4. `hybrid`: Complex queries requiring simultaneous reasoning over process flow and textual policy constraints.
+
+### Mapping to Three Dynamic Retrieval Allocation Profiles
+The four intent classes map dynamically onto three discrete retrieval allocation profiles $\mathbf{k}(r) = \langle k_{\text{sop}}, k_{\text{bpmn}} \rangle$:
+- **SOP-Dominant Profile** ($\langle 6, 2 \rangle$): Allocated to `document_requirement` queries where textual policy clauses dominate, maintaining light BPMN grounding for process context.
+- **BPMN-Dominant Profile** ($\langle 3, 4 \rangle$): Allocated to `workflow` and `decision_gateway` queries requiring structured directed graph traversal and path reasoning.
+- **Balanced Hybrid Profile** ($\langle 5, 3 \rangle$): Allocated to `hybrid` queries requiring extensive joint text and graph evidence.
+
+---
+
+## 3. OFFLINE STATISTICAL RECOMPUTATION VS. LIVE LLM OUTPUT REGENERATION
+
+A fundamental methodological distinction is maintained between offline evaluation and live pipeline execution:
+
+1. **Deterministic Offline Statistical Recomputation (Verification Mode):**
+   - Public reviewer verification scripts ([`scripts/verify_research_release.py`](scripts/verify_research_release.py)) and the statistical testing engine ([`evaluation/statistical_analysis.py`](evaluation/statistical_analysis.py)) execute purely offline mathematical and inferential recomputations directly from stored, authentic empirical trial records ([`results/master_results.csv`](results/master_results.csv), [`results/benchmark_results_primary_gemini.json`](results/benchmark_results_primary_gemini.json)).
+   - **No external API calls or live model regeneration are performed during verification.**
+   - This guarantees that independent reviewers can reproduce all reported means, standard deviations, paired Cohen's $d_z$, Wilcoxon signed-rank $p$-values, bootstrap confidence intervals, and Holm-Bonferroni multiplicity corrections locally, deterministically, instantly, and at zero financial cost.
+
+2. **Live Pipeline Execution (Inference Mode):**
+   - Live query answering (`python main.py query "..."`) or full benchmark re-execution invokes cloud foundation-model endpoints (`gemini-3.5-flash-lite` or `qwen/qwen3.8-27b`), requiring valid API credentials in `.env`.
+   - Live generation is subject to standard cloud API properties (greedy decoding at $T=0.0$, but lacking hardware-level bitwise seed pinning).
+
+---
+
+## 4. EXACT COHORT RECONCILIATION & ACCOUNTING (388 MASTER RECORDS)
 
 The authoritative raw data file `results/master_results.csv` contains exactly **388 execution records**. The accounting across all evaluation cohorts is strictly verified as follows:
 
@@ -44,9 +84,9 @@ The authoritative raw data file `results/master_results.csv` contains exactly **
 
 ---
 
-## 3. METRIC DEFINITIONS & CONSTRUCT VALIDITY
+## 5. METRIC DEFINITIONS & CONSTRUCT VALIDITY
 
-Automated evaluation metrics do not invoke third-party unconstrained LLM-as-a-judge pipelines or official `ragas` / `bert_score` packages. They implement deterministic surrogate functions codified in [`evaluation/metrics/standard_rag_metrics.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py):
+Automated evaluation metrics do not invoke third-party unconstrained LLM-as-a-judge pipelines or official `ragas` / `bert_score` packages. They implement deterministic surrogate functions codified in [`evaluation/metrics/standard_rag_metrics.py`](evaluation/metrics/standard_rag_metrics.py):
 
 | Metric | Code Implementation Function | Mathematical Algorithm | Construct Target & Operational Boundary |
 | :--- | :--- | :--- | :--- |
@@ -59,7 +99,7 @@ Automated evaluation metrics do not invoke third-party unconstrained LLM-as-a-ju
 
 ---
 
-## 4. INDEPENDENT STATISTICAL VERIFICATION (TABLE 2 MATCH)
+## 6. INDEPENDENT STATISTICAL VERIFICATION (TABLE 2 MATCH)
 
 Direct recomputation across the 70 paired queries in `results/master_results.csv` against `results/statistical_tests.csv`:
 
@@ -80,7 +120,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 5. README 0.8585 VS. MANUSCRIPT 0.9883 PROVENANCE RESOLUTION
+## 7. README 0.8585 VS. MANUSCRIPT 0.9883 PROVENANCE RESOLUTION
 
 ### Forensic Evidence from Commit `6183cd3`
 - **Commit:** `6183cd3ef258f031f0446fea0c63b52cfd9b6ed7` (Nov 3, 2026, 03:34:37 UTC)
@@ -97,7 +137,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 6. MODEL IDENTITY RESOLUTION (QWEN BACKBONE)
+## 8. MODEL IDENTITY RESOLUTION (QWEN BACKBONE)
 
 - **API Endpoint Invoked:** `qwen/qwen3.8-27b` via Groq Cloud API (`https://api.groq.com/openai/v1`).
 - **Configuration File:** `evaluation/experiment_config.json`, line 32: `"model_identifier": "qwen/qwen3.8-27b"`.
@@ -107,7 +147,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 7. ZENODO ARTIFACTS PROVENANCE
+## 9. ZENODO ARTIFACTS PROVENANCE
 
 - **Deposit Registry:** Zenodo Record ID `23242855`, Concept ID `23242854`, DOI `10.5281/zenodo.23242855`.
 - **Registered Asset:** `ICICOS_ProcessQA_Dataset.zip` (`83,176` bytes, MD5: `b64b9c5e6a8d581a52effdb35865f5e9`).

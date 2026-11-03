@@ -181,7 +181,13 @@ def verify_published_tables():
 
 
 def main():
-    print("Starting ICICOS Scientific Reproducibility Verification Suite...")
+    print("======================================================================")
+    print("ICICOS SCIENTIFIC REPRODUCIBILITY VERIFICATION SUITE")
+    print("Target Journal : Knowledge-Based Systems (Elsevier, Q1)")
+    print("Execution Mode : Deterministic Offline Statistical Recomputation")
+    print("Data Source    : results/master_results.csv (N=70 paired, 388 master rows)")
+    print("Note           : Strictly offline verification; no live LLM API calls.")
+    print("======================================================================")
     gem, complete_qids = verify_raw_data_and_cohort()
     if gem is None:
         sys.exit(1)

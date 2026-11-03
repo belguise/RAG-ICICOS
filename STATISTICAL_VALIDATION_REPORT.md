@@ -1,7 +1,7 @@
 # STATISTICAL VALIDATION & INFERENTIAL ANALYSIS REPORT
 **Project:** ICICOS — Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering  
 **Target Venue:** *Knowledge-Based Systems* (Elsevier, Q1)  
-**Authoritative Raw Data Source:** [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv) (388 total query records)  
+**Authoritative Raw Data Source:** [`results/master_results.csv`](results/master_results.csv) (388 total query records)  
 **Primary Evaluated Sample:** $N = 70$ completely paired queries (350 executions across 5 architectures)  
 **Date:** November 2026  
 **Auditor / Statistician:** Senior Statistician & Scientific Reproducibility Auditor  
@@ -10,27 +10,27 @@
 
 ## 1. Executive Summary
 
-This statistical audit reconstructs all reported experimental statistics, paired hypothesis tests, bootstrap confidence intervals, and effect sizes directly from the raw, query-level experimental observations stored in [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv).
+This statistical audit reconstructs all reported experimental statistics, paired hypothesis tests, bootstrap confidence intervals, and effect sizes directly from the raw, query-level experimental observations stored in [`results/master_results.csv`](results/master_results.csv).
 
 Prior to this engineering pass:
-- The legacy script [`evaluation/statistical_analysis.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/statistical_analysis.py) contained hardcoded architecture summary dictionaries (lines 77–128) and fabricated 3-trial perturbation arrays (lines 144–205) that manually inserted manuscript numbers into the analysis pipeline.
+- The legacy script [`evaluation/statistical_analysis.py`](evaluation/statistical_analysis.py) contained hardcoded architecture summary dictionaries (lines 77–128) and fabricated 3-trial perturbation arrays (lines 144–205) that manually inserted manuscript numbers into the analysis pipeline.
 - Effect sizes were inconsistently labeled without distinguishing between paired Cohen's $d_z$ and independent-samples Cohen's $d$.
 - Family-wise error rates across multiple primary outcomes were reported without formal multiplicity adjustment.
 
 ### Key Actions Completed in Phase 5
-1. **Purged All Hardcoded Summaries:** Fully rewrote [`evaluation/statistical_analysis.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/statistical_analysis.py) to dynamically ingest raw records from [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv). Zero hardcoded metrics remain.
+1. **Purged All Hardcoded Summaries:** Fully rewrote [`evaluation/statistical_analysis.py`](evaluation/statistical_analysis.py) to dynamically ingest raw records from [`results/master_results.csv`](results/master_results.csv). Zero hardcoded metrics remain.
 2. **Validated Raw Data & Disclosed Exclusions:** Audited all 354 Gemini records; verified that exactly $N=70$ queries completed across all five architectures without missing values. Disclosed the single incomplete query (`ICICOS_DEC_234`), which halted due to cloud API daily quota boundaries.
 3. **Paired Inferential Testing:** Computed paired Student's $t$-tests, Wilcoxon signed-rank tests, Shapiro-Wilk difference normality checks, and paired Cohen's $d_z$ effect sizes.
 4. **10,000-Resample Paired Bootstrap Analysis:** Generated empirical 95% confidence intervals preserving paired within-subject covariance.
 5. **Multiplicity Control:** Applied the Holm-Bonferroni step-down procedure to all primary hypothesis tests, demonstrating that the modest drop in Answer Relevancy ($\Delta = -0.0354$) is statistically non-significant ($p_{\text{adj}} = 0.1030$).
 6. **Per-Stage Latency Forensics:** Verified the conditional self-repair latency breakdown: initial-pass compliant queries require $9.97\text{s}$ ($n=53$), while repaired queries require $13.22\text{s}$ ($n=17$), confirming the $+3.26\text{s}$ repair overhead.
-7. **Regenerated All Authoritative CSV Tables:** Re-exported [`results/final_comparison_table.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/final_comparison_table.csv), [`results/statistical_summary.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/statistical_summary.csv), [`results/statistical_tests.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/statistical_tests.csv), [`results/cross_backbone_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/cross_backbone_results.csv), [`results/ablation_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/ablation_results.csv), and [`results/experiment_report.md`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/experiment_report.md).
+7. **Regenerated All Authoritative CSV Tables:** Re-exported [`results/final_comparison_table.csv`](results/final_comparison_table.csv), [`results/statistical_summary.csv`](results/statistical_summary.csv), [`results/statistical_tests.csv`](results/statistical_tests.csv), [`results/cross_backbone_results.csv`](results/cross_backbone_results.csv), [`results/ablation_results.csv`](results/ablation_results.csv), and [`results/experiment_report.md`](results/experiment_report.md).
 
 ---
 
 ## 2. Raw Data Validation & Exclusion Disclosures
 
-The primary benchmark cohort was evaluated using Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, $T=0.0$) against the stratified sampling manifest [`results/primary_benchmark_manifest.json`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/primary_benchmark_manifest.json).
+The primary benchmark cohort was evaluated using Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, $T=0.0$) against the stratified sampling manifest [`results/primary_benchmark_manifest.json`](results/primary_benchmark_manifest.json).
 
 ### Validation Findings
 - **Total Gemini Records in Log:** 354 rows across 71 unique query IDs.
@@ -52,7 +52,7 @@ The primary benchmark cohort was evaluated using Google Gemini 3.5 Flash-Lite (`
 
 ## 3. Primary Benchmark Comparative Results ($N = 70$)
 
-The table below reports descriptive sample means computed directly from raw query-level outputs in [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv).
+The table below reports descriptive sample means computed directly from raw query-level outputs in [`results/master_results.csv`](results/master_results.csv).
 
 ### Table 1: Primary Comparative Benchmark Across 5 Architectures ($N=70$ Matched Queries)
 
@@ -125,7 +125,7 @@ The multi-agent architecture incurs a statistically significant latency overhead
 | **Proposed Agentic Hybrid** | **10.76s** | 7.32s | **7.81s** | 5.48s | 6.78s | 12.26s | **27.85s** | [9.21s, 12.57s] |
 
 ### 5.1 Conditional Self-Repair Latency Decomposition
-Query-level tracing in [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv) confirms the exact source of latency inflation:
+Query-level tracing in [`results/master_results.csv`](results/master_results.csv) confirms the exact source of latency inflation:
 - **Initial-Pass Compliant Queries ($n = 53 / 70$, 75.7%):**
   - Average Latency: **9.97s** (Median: 7.81s, Std: 5.20s).
   - Multi-agent coordination overhead (Intent router + dual retrieval + fusion + generator draft + Critic verification audit).
@@ -143,7 +143,7 @@ Query-level tracing in [`results/master_results.csv`](file:///c:/FILE%20LINATNG/
 In accordance with Section 6 of the Master Directive, different experimental cohorts are strictly segregated.
 
 ### 6.1 Cross-Backbone Diagnostic Suite (Qwen 3.8 27B on Groq)
-Derived from 34 query executions recorded in [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv) across 7 unique benchmark queries:
+Derived from 34 query executions recorded in [`results/master_results.csv`](results/master_results.csv) across 7 unique benchmark queries:
 
 | Architecture | Evaluated Queries ($N$) | Qwen Faithfulness | Gemini Faithfulness (Matched Subset) | Qwen Hallucination Rate | Gemini Hallucination Rate (Matched) | Qwen Latency | Gemini Latency (Matched) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -157,20 +157,20 @@ Derived from 34 query executions recorded in [`results/master_results.csv`](file
 
 ### 6.2 Component Ablation Experiment ($N = 20$)
 - **Directive 9 Audit Disclosure:** Historical logs in `generate_ablation_analysis.py` only preserved aggregate means without raw per-query response text.
-- **Action Taken:** In [`results/ablation_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/ablation_results.csv), we explicitly record the cohort definition ($N=20$, balanced 5 per category from `ICICOS_ProcessQA_Dataset/cohorts/ablation_n20.csv`), report the historical relative degradation factors ($w/o\text{ BPMN} = 0.9841$, $w/o\text{ Router} = 0.9252$, $\text{Dense} = 0.7423$), and append an authoritative audit warning that query-level logs are unrecorded. **No synthetic data were generated.**
+- **Action Taken:** In [`results/ablation_results.csv`](results/ablation_results.csv), we explicitly record the cohort definition ($N=20$, balanced 5 per category from `ICICOS_ProcessQA_Dataset/cohorts/ablation_n20.csv`), report the historical relative degradation factors ($w/o\text{ BPMN} = 0.9841$, $w/o\text{ Router} = 0.9252$, $\text{Dense} = 0.7423$), and append an authoritative audit warning that query-level logs are unrecorded. **No synthetic data were generated.**
 
 ---
 
 ## 7. Regenerated Output Artifacts & Verification Checksums
 
-All statistical outputs have been re-exported directly from raw data to both [`results/`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results) and [`evaluation/results/`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/results):
+All statistical outputs have been re-exported directly from raw data to both [`results/`](results) and [`evaluation/results/`](evaluation/results):
 
-1. [`results/final_comparison_table.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/final_comparison_table.csv) — 5-architecture primary summary.
-2. [`results/statistical_summary.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/statistical_summary.csv) — Complete descriptive distribution (Mean, Std, Median, IQR, Q1, Q3, 95% Bootstrap CI).
-3. [`results/statistical_tests.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/statistical_tests.csv) — Paired inferential hypothesis tests, Cohen's $d_z$, Wilcoxon $W$, Shapiro-Wilk, and Holm-Bonferroni adjusted $p$-values.
-4. [`results/cross_backbone_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/cross_backbone_results.csv) — Raw-grounded Qwen 3.8 27B cross-backbone comparison.
-5. [`results/ablation_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/ablation_results.csv) — Ablation cohort specifications with strict audit disclosures.
-6. [`results/experiment_report.md`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/experiment_report.md) — Comprehensive markdown experimental report.
+1. [`results/final_comparison_table.csv`](results/final_comparison_table.csv) — 5-architecture primary summary.
+2. [`results/statistical_summary.csv`](results/statistical_summary.csv) — Complete descriptive distribution (Mean, Std, Median, IQR, Q1, Q3, 95% Bootstrap CI).
+3. [`results/statistical_tests.csv`](results/statistical_tests.csv) — Paired inferential hypothesis tests, Cohen's $d_z$, Wilcoxon $W$, Shapiro-Wilk, and Holm-Bonferroni adjusted $p$-values.
+4. [`results/cross_backbone_results.csv`](results/cross_backbone_results.csv) — Raw-grounded Qwen 3.8 27B cross-backbone comparison.
+5. [`results/ablation_results.csv`](results/ablation_results.csv) — Ablation cohort specifications with strict audit disclosures.
+6. [`results/experiment_report.md`](results/experiment_report.md) — Comprehensive markdown experimental report.
 
 ---
 

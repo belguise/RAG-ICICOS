@@ -62,7 +62,7 @@ With parameter $\theta_{\text{token}} = 0.45$, where $\mathcal{T}(\cdot)$ denote
 - **None**. Gold reference answers ($A_{\text{gold}}$) are strictly withheld to evaluate retrieval faithfulness rather than semantic overlap.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/standard_rag_metrics.py:45-141`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py#L45-L141).
+- Location: [`evaluation/metrics/standard_rag_metrics.py:45-141`](evaluation/metrics/standard_rag_metrics.py#L45-L141).
 - Statement segmentation: Regex `re.split(r"(?:[\n;]|\.\s+)", generated_answer)` filtered by length $> 15$ characters.
 - Conversational filtering: Strips conversational headers matching `["berdasarkan", "referensi sumber", "catatan:", "ringkasan:"]`.
 - Grounding verification: Evaluates substantive token overlap threshold ($\ge 0.45$) or exact 4-gram sliding window string containment.
@@ -117,7 +117,7 @@ Where:
 - **Strictly Withheld**. Reference answers are not provided to prevent data leakage.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/standard_rag_metrics.py:148-189`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py#L148-L189).
+- Location: [`evaluation/metrics/standard_rag_metrics.py:148-189`](evaluation/metrics/standard_rag_metrics.py#L148-L189).
 - SentenceTransformer: Cached singleton `_EMBEDDING_MODEL` loading `paraphrase-multilingual-MiniLM-L12-v2` with offline fallback.
 - Intent extractor: Content words of length $> 3$ from question checked against answer text.
 
@@ -173,7 +173,7 @@ $$v_k = \begin{cases}
 - **Required**. Requires gold reference answer $A_{\text{gold}}$ to establish ground-truth relevance of chunks.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/standard_rag_metrics.py:195-256`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py#L195-L256).
+- Location: [`evaluation/metrics/standard_rag_metrics.py:195-256`](evaluation/metrics/standard_rag_metrics.py#L195-L256).
 
 #### 7. Model Used for Evaluation
 - **None** (Deterministic algorithmic token overlap).
@@ -221,7 +221,7 @@ $$\text{Covered}(r_j, C) = \begin{cases}
 - **Required**. Ground-truth reference answer is the sole source of evaluation propositions.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/standard_rag_metrics.py:262-307`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py#L262-L307).
+- Location: [`evaluation/metrics/standard_rag_metrics.py:262-307`](evaluation/metrics/standard_rag_metrics.py#L262-L307).
 
 #### 7. Model Used for Evaluation
 - **None** (Deterministic algorithmic token overlap).
@@ -273,7 +273,7 @@ Given answer $A$ split into sentences $\{u_1, \dots, u_m\}$ and reference $A_{\t
 - **Required**.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/standard_rag_metrics.py:313-372`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/standard_rag_metrics.py#L313-L372).
+- Location: [`evaluation/metrics/standard_rag_metrics.py:313-372`](evaluation/metrics/standard_rag_metrics.py#L313-L372).
 - Normalized embeddings via `model.encode(sents, normalize_embeddings=True)`.
 - Sentence segmentation: `re.split(r"[\n.]+", text)` filtered by length $> 8$ characters.
 
@@ -321,8 +321,8 @@ $$\text{EUSR} + \text{EGS} \equiv 1.0$$
 - **None**. Evaluated strictly against retrieved context $C$.
 
 #### 6. Actual Implementation & Location
-- Location: [`evaluation/metrics/rag_metrics.py:calculate_evidence_grounding`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/rag_metrics.py).
-- In [`results/master_results.csv`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/results/master_results.csv), the column is labeled `hallucination_rate`. In the manuscript (Tables 1, 2, 3), it is presented as **EUSR**.
+- Location: [`evaluation/metrics/rag_metrics.py:calculate_evidence_grounding`](evaluation/metrics/rag_metrics.py).
+- In [`results/master_results.csv`](results/master_results.csv), the column is labeled `hallucination_rate`. In the manuscript (Tables 1, 2, 3), it is presented as **EUSR**.
 
 #### 7. Output Range
 - Bounded percentage $[0.0\%, 100.0\%]$ or $[0.0, 1.0]$. Lower is better ($\downarrow$).
@@ -336,7 +336,7 @@ $$\text{EUSR} + \text{EGS} \equiv 1.0$$
 ### 2.7 PROCESS PATH ACCURACY (PPA)
 
 #### 1. Official Metric Name
-- **Operational Implementation**: Process Path Accuracy (`calculate_path_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/bpmn_process_metrics.py#L65-L140)).
+- **Operational Implementation**: Process Path Accuracy (`calculate_path_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](evaluation/metrics/bpmn_process_metrics.py#L65-L140)).
 
 #### 2. Scientific Definition
 Testbed-specific procedural diagnostic evaluating whether the execution sequence of business process activities in generated answer $A$ matches the ground-truth BPMN workflow path $G_{\text{gold}}$ in both step coverage and chronological sequence flow.
@@ -367,7 +367,7 @@ Where:
 ### 2.8 GATEWAY DECISION ACCURACY (GDA)
 
 #### 1. Official Metric Name
-- **Operational Implementation**: Gateway Decision Accuracy (`calculate_gateway_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/bpmn_process_metrics.py#L143-L237)).
+- **Operational Implementation**: Gateway Decision Accuracy (`calculate_gateway_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](evaluation/metrics/bpmn_process_metrics.py#L143-L237)).
 
 #### 2. Scientific Definition
 Testbed-specific diagnostic measuring whether the model correctly identifies XOR/OR conditional branching guards, decision predicates, and resulting terminal consequences.
@@ -389,7 +389,7 @@ Where $\text{ConditionIdentified} \in \{0, 1\}$ detects presence of institutiona
 ### 2.9 ACTOR ATTRIBUTION ACCURACY / RECALL (AAA / AAR)
 
 #### 1. Official Metric Name
-- **Operational Implementation**: Actor Attribution Recall / Accuracy (`calculate_actor_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/metrics/bpmn_process_metrics.py#L240-L330)).
+- **Operational Implementation**: Actor Attribution Recall / Accuracy (`calculate_actor_accuracy` in [`evaluation/metrics/bpmn_process_metrics.py`](evaluation/metrics/bpmn_process_metrics.py#L240-L330)).
 
 #### 2. Scientific Definition
 Evaluates whether the organizational roles (BPMN swimlanes) responsible for executing specific procedural activities are correctly attributed in the generated answer.

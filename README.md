@@ -49,7 +49,10 @@
           (Source Attribution)      (Max 2 Revision Cycles)
 ```
 
-1. **Adaptive Intent Router**: Categorizes procedural intent (`SOP_ONLY`, `BPMN_ONLY`, `HYBRID`) using domain priors and dynamic thresholds to allocate optimal retrieval budgets.
+1. **Adaptive Intent Router**: Categorizes operational queries across 4 discrete intent classes (`document_requirement`, `workflow`, `decision_gateway`, `hybrid`) using two-stage heuristic-gated schema classification. These 4 intents map dynamically onto 3 discrete retrieval allocation profiles:
+   - **SOP-Dominant** ($\\langle k_{\\text{sop}}=6, k_{\\text{bpmn}}=2 \\rangle$): for `document_requirement` queries focusing on policy rules and checklist compliance.
+   - **BPMN-Dominant** ($\\langle k_{\\text{sop}}=3, k_{\\text{bpmn}}=4 \\rangle$): for `workflow` and `decision_gateway` queries focusing on process execution order and branch logic.
+   - **Balanced Hybrid** ($\\langle k_{\\text{sop}}=5, k_{\\text{bpmn}}=3 \\rangle$): for complex `hybrid` queries requiring extensive joint text and graph evidence.
 2. **Dual-Channel Retrieval Engine**:
    - **Textual Channel**: Dense semantic similarity search over chunked SOP text collections persisted in ChromaDB.
    - **Structural Channel**: Topological graph retrieval extracting directed execution traces, decision gateway guards, and swimlane role attributions from BPMN 2.0 XML graphs.
@@ -190,8 +193,12 @@ Interactive OpenAPI documentation will be accessible at `http://localhost:8000/d
 
 ## Experimental Reproducibility & Verification
 
+> **NOTE ON OFFLINE VERIFICATION & REPRODUCIBILITY**:  
+> The verification scripts (`scripts/verify_research_release.py` and `evaluation/statistical_analysis.py`) execute **deterministic offline statistical recomputations directly from stored trial data** (`results/master_results.csv`, `results/benchmark_results_primary_gemini.json`). They do **not** invoke external model APIs or perform live generation, allowing reviewers to verify all statistical findings locally and instantly without API credentials or inference costs.  
+> The underlying primary benchmark was executed using **Google Gemini 3.5 Flash-Lite** (`gemini-3.5-flash-lite`, Generative Language API v1beta) with greedy decoding ($T=0.0$). The configured `seed=42` governs dataset cohort stratification and the 10,000 paired bootstrap resampling iterations; cloud foundation-model APIs do not support hardware-level bitwise generation seeds.
+
 ### 1. One-Click Reviewer Verification Script
-To independently recompute all primary descriptive and inferential statistics directly from raw per-query trial observations and verify mathematical consistency against the manuscript without external API calls:
+To independently recompute all primary descriptive and inferential statistics directly from stored raw per-query trial observations and verify mathematical consistency against the manuscript without external API calls (offline mode):
 ```bash
 python scripts/verify_research_release.py
 ```

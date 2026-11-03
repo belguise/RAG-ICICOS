@@ -19,9 +19,9 @@ Prior to this engineering pass:
 ### Key Hardening Actions Completed
 1. **Model Audit & Truthful Parameterization:** Verified all model identifiers, provider endpoints, temperature settings ($T=0.0$), timeouts, retries, and documented the exact physical boundaries of LLM decoding determinism.
 2. **Sampling Manifest & Cohort Verification:** Audited all 5 experimental cohorts against the canonical 338-query corpus; mathematically proved cohort disjointness between the primary ($N=70$) and procedural ($N=60$) suites ($|S_{\text{primary}} \cap S_{\text{procedural}}| = 0$).
-3. **Dataset Integrity & Cryptographic Checksums:** Inspected all 338 queries for schema compliance, duplicate IDs (0 found), and missing fields (0 found); generated authoritative SHA-256 checksums in [`evaluation/DATASET_MANIFEST_CHECKSUMS.sha256`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/DATASET_MANIFEST_CHECKSUMS.sha256).
-4. **Structured Experiment Provenance:** Formulated [`evaluation/run_metadata_schema.json`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/run_metadata_schema.json) and generated [`evaluation/reproducibility_run_metadata.json`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/reproducibility_run_metadata.json) linking the exact Git commit SHA, environment hashes, and verified metrics.
-5. **Dependency Pinning:** Extracted and generated [`environment.lock`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/environment.lock) from the authoritative execution environment; reconciled [`requirements.txt`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/requirements.txt) and [`pyproject.toml`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/pyproject.toml).
+3. **Dataset Integrity & Cryptographic Checksums:** Inspected all 338 queries for schema compliance, duplicate IDs (0 found), and missing fields (0 found); generated authoritative SHA-256 checksums in [`evaluation/DATASET_MANIFEST_CHECKSUMS.sha256`](evaluation/DATASET_MANIFEST_CHECKSUMS.sha256).
+4. **Structured Experiment Provenance:** Formulated [`evaluation/run_metadata_schema.json`](evaluation/run_metadata_schema.json) and generated [`evaluation/reproducibility_run_metadata.json`](evaluation/reproducibility_run_metadata.json) linking the exact Git commit SHA, environment hashes, and verified metrics.
+5. **Dependency Pinning:** Extracted and generated [`environment.lock`](environment.lock) from the authoritative execution environment; reconciled [`requirements.txt`](requirements.txt) and [`pyproject.toml`](pyproject.toml).
 6. **Execution Cost & API Call Budget:** Calculated complete token requirements and API cost estimates for experimental verification runs, presented below for author approval.
 
 ---
@@ -98,7 +98,7 @@ The ICICOS evaluation benchmark is organized into five verifiable, documented co
 
 ## 4. Dataset Integrity & Cryptographic Checksums
 
-The master dataset resides in [`ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json).
+The master dataset resides in [`ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json`](ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json).
 
 ### Quality Audit Results
 - **Total Records:** 338
@@ -108,7 +108,7 @@ The master dataset resides in [`ICICOS_ProcessQA_Dataset/benchmark/icicos_proces
 - **Data Leakage:** No train/test leakage exists; ICICOS is a zero-shot, in-context agentic reasoning framework with frozen foundation weights.
 
 ### Table 3: Authoritative Cryptographic SHA-256 Checksums
-All checksums have been stored in [`evaluation/DATASET_MANIFEST_CHECKSUMS.sha256`](file:///c:/FILE%20LINATNG/RAG%20BELAJAR/evaluation/DATASET_MANIFEST_CHECKSUMS.sha256):
+All checksums have been stored in [`evaluation/DATASET_MANIFEST_CHECKSUMS.sha256`](evaluation/DATASET_MANIFEST_CHECKSUMS.sha256):
 
 ```text
 3ff56beac177b42706e34abac269d58ce4f0ef4af699cad47a6e71c1aecc356a  ICICOS_ProcessQA_Dataset/benchmark/icicos_process_qa.json
@@ -134,15 +134,15 @@ fbcc8b50e5514ee097d4f9dd9632dd2d4a57d73f0c8b76a670219aae13ebbbf6  results/master
 
 To eliminate future ambiguity in benchmark replication, every execution must be bound to:
 1. **Git Commit SHA:** Fixed at `4defd04678f66ea64f674ea0bf107fc7f907edc3`.
-2. **Standardized Schema:** Formal JSON Schema (draft 2020-12) created at [`evaluation/run_metadata_schema.json`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/evaluation/run_metadata_schema.json).
-3. **Structured Metadata Record:** Created at [`evaluation/reproducibility_run_metadata.json`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/evaluation/reproducibility_run_metadata.json) linking dataset hashes, model parameters, hardware environment, and metric outcomes.
+2. **Standardized Schema:** Formal JSON Schema (draft 2020-12) created at [`evaluation/run_metadata_schema.json`](evaluation/run_metadata_schema.json).
+3. **Structured Metadata Record:** Created at [`evaluation/reproducibility_run_metadata.json`](evaluation/reproducibility_run_metadata.json) linking dataset hashes, model parameters, hardware environment, and metric outcomes.
 
 ---
 
 ## 6. Dependency Management & Exact Environment Locking
 
 ### 6.1 Generated `environment.lock`
-The dedicated virtual environment (`.venv/`) was audited and frozen directly into [`environment.lock`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/environment.lock). Key packages pinned include:
+The dedicated virtual environment (`.venv/`) was audited and frozen directly into [`environment.lock`](environment.lock). Key packages pinned include:
 - `langchain==1.3.16`
 - `langchain-core==1.6.1`
 - `langchain-community==0.4.2`
@@ -159,9 +159,9 @@ The dedicated virtual environment (`.venv/`) was audited and frozen directly int
 - `pydantic==2.13.4`
 
 ### 6.2 Updated Project Configuration Files
-- [`requirements.txt`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/requirements.txt): Updated with justified dependencies for cross-backbone testing (`langchain-groq`, `groq`), statistical validation (`scipy`, `pandas`), and graph analysis (`networkx`).
-- [`pyproject.toml`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/pyproject.toml): Version bumped to `0.2.0`; core dependencies reconciled with optional groups for `cross-backbone` and `eval`.
-- [`evaluation_config.yaml`](file:///c:/FILE%20LINATNG\RAG%20BELAJAR/evaluation_config.yaml): Reconciled with Elsevier KBS standards, exact $N=70$ primary sample size, and $T=0.0$ greedy sampling parameters.
+- [`requirements.txt`](requirements.txt): Updated with justified dependencies for cross-backbone testing (`langchain-groq`, `groq`), statistical validation (`scipy`, `pandas`), and graph analysis (`networkx`).
+- [`pyproject.toml`](pyproject.toml): Version bumped to `0.2.0`; core dependencies reconciled with optional groups for `cross-backbone` and `eval`.
+- [`evaluation_config.yaml`](evaluation_config.yaml): Reconciled with Elsevier KBS standards, exact $N=70$ primary sample size, and $T=0.0$ greedy sampling parameters.
 
 ---
 

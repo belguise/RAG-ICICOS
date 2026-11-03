@@ -30,7 +30,7 @@ An exhaustive, multi-pass security scan was executed across:
 ## 2. SCANNING FINDINGS & REMEDIATION STATUS
 
 ### Finding S-01: Local Development `.env` File
-- **Location:** `c:\FILE LINATNG\RAG BELAJAR\.env`
+- **Location:** `./.env`
 - **Detected Payload:** Local developer API keys (Google Gemini and Groq) used for benchmark execution.
 - **Git Tracking Status:** **NOT TRACKED.**
   - Ignored via `.gitignore` (Line 4: `.env`).
@@ -41,7 +41,7 @@ An exhaustive, multi-pass security scan was executed across:
 - **Action Taken:** Verified that `.gitignore` strictly protects `.env`. Confirmed `.env` will never be staged.
 
 ### Finding S-02: Public Template `.env.example`
-- **Location:** `c:\FILE LINATNG\RAG BELAJAR\.env.example`
+- **Location:** `./.env.example`
 - **Audit:** Contains strictly non-sensitive placeholder tokens (`your_gemini_api_key_here`, `your_groq_api_key_here`).
 - **Hardening:** Updated `API_HOST` from `0.0.0.0` to `127.0.0.1` to prevent binding to public interfaces.
 - **Status:** **CLEARED.**

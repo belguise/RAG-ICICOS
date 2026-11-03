@@ -31,7 +31,7 @@ In accordance with Phase D directives, every file group in the workspace is assi
 | **`FINAL KBS FIX/*.pdf` (Manuscript & Figures)**| `LOCAL_ONLY` / `AUDIT` | Authoritative 22-page manuscript and vector figures. Retained locally for journal submission package. |
 | **Temporary LaTeX Intermediates (`.aux`, `.log`)**| `BUILD_ARTIFACT` | Disposable compiler artifacts. Excluded from Git tracking. |
 | **Ephemeral Caches (`chroma_db/`, `__pycache__/`)**| `BUILD_ARTIFACT` | Runtime vector caches and Python bytecode. Ignored by `.gitignore`. |
-| **External Recoverable Backup** | `HISTORICAL_PRESERVE` | Located outside repository at `C:\FILE LINATNG\BACKUP_RAG_BELAJAR_RELEASE_20261104`. |
+| **External Recoverable Backup** | `HISTORICAL_PRESERVE` | Located outside repository at `../BACKUP_RAG_BELAJAR_RELEASE_20261104`. |
 
 ---
 
@@ -49,5 +49,5 @@ The `.gitignore` configuration was audited and hardened to:
 ## 3. AUDIT OF REMOVED & PRESERVED ASSETS
 
 - **Destructive Deletion Policy:** Zero historical CSVs, JSON logs, or python scripts were deleted.
-- **External Archiving:** All pre-release git states and uncommitted diffs were bundled into `C:\FILE LINATNG\BACKUP_RAG_BELAJAR_RELEASE_20261104\repo_bundle_all_refs.bundle` (2.4 MB).
+- **External Archiving:** All pre-release git states and uncommitted diffs were bundled into `../BACKUP_RAG_BELAJAR_RELEASE_20261104\repo_bundle_all_refs.bundle` (2.4 MB).
 - **Workspace Hygiene:** Scratch test files (`test_frontmatter.pdf`, `test_frontmatter.tex`) remain untracked and excluded from staging.
