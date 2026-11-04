@@ -18,7 +18,7 @@ The primary empirical benchmark underlying all published results was executed un
 - **Raw Execution Traces:** [`results/benchmark_results_primary_gemini.json`](results/benchmark_results_primary_gemini.json) (`884,883` bytes, SHA-256: `79BEE445C3A46C4EF1080AA977C018AB04A3DFBBEC960447998B92400A0E09F2`)
 - **Primary Tabular Records:** [`results/master_results.csv`](results/master_results.csv) (`45,605` bytes, SHA-256: `FBCC8B50E5514EE097D4F9DD9632DD2D4A57D73F0C8B76A670219AAE13EBBBF6`)
 - **LLM Backbone (Historical Verification):** Google Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, via Google Generative Language API v1beta / Google AI Studio).
-  - *Provenance Audit & Clarification:* The underlying raw benchmark execution trace (`results/benchmark_results_primary_gemini.json`, run `EXP_PRIMARY_GEMINI_20261006_162813`) logs `"backbone": "gemini"`. The corresponding runtime settings (`src/agentic_rag_sop/config/settings.py`), experiment specification (`evaluation/experiment_config.json`), metadata manifest (`evaluation/reproducibility_run_metadata.json`), and manuscript specify `gemini-3.5-flash-lite`. The colloquial mention of `gemini-1.5-flash` in earlier informal auditor notes was an unverified auditor gloss and is formally retracted. No `gemini-1.5-flash` API endpoint was invoked for the authoritative primary benchmark.
+  - *Provenance Audit & Forensic Distinction:* In the primary raw trial traces (`results/benchmark_results_primary_gemini.json`), the runtime execution logger recorded the backbone family as `"backbone": "gemini"`. Captured benchmark JSON records omit raw HTTP request/response headers. The operational experiment configuration (`evaluation/experiment_config.json`), reproducibility metadata (`evaluation/reproducibility_run_metadata.json`), and application settings (`src/agentic_rag_sop/config/settings.py`) all explicitly specify `gemini-3.5-flash-lite` via the Generative Language API v1beta. To preserve strict scientific veracity without overclaiming, we qualify that the historical trial runs are verified as Google Gemini (v1beta API), with repository configurations specifying `gemini-3.5-flash-lite`. Any earlier casual auditor note mentioning `gemini-1.5-flash` was an unverified informal gloss and is formally retracted.
 - **Decoding Configuration & Role of Seed 42:**
   - *Model Inference Decoding:* Greedy sampling ($T = 0.0$, $\text{top-}p = 1.0$) was enforced across all model calls to achieve algorithmically deterministic, lowest-entropy completions.
   - *Seed Support Boundary:* As explicitly documented in `evaluation/experiment_config.json` (`"seed_support": {"supported_by_api": false, "supported_by_langchain_wrapper": false}`), the Google Generative Language API does not provide bitwise generation determinism via API seeds across distributed TPU/GPU hardware clusters.
@@ -49,7 +49,16 @@ The four intent classes map dynamically onto three discrete retrieval allocation
 
 ---
 
-## 3. OFFLINE STATISTICAL RECOMPUTATION VS. LIVE LLM OUTPUT REGENERATION
+---
+
+## 3. GRAPH REACHABILITY MATHEMATICAL FORMULATION & ORDER THEORY
+
+In Section 3.1 and Figure 2/3 of the manuscript, graph reachability is formalized as follows:
+- **Transitive Preorder on General Graphs:** For an arbitrary directed process graph $G = (V, E)$ containing iterative review cycles or rework loops, directed reachability $u \rightsquigarrow_G v$ defines a preorder (reflexive and transitive). Antisymmetry does not hold across cyclic paths ($u \rightsquigarrow_G v \wedge v \rightsquigarrow_G u \not\implies u = v$).
+- **Strict Partial Order on DAG Subgraphs:** When restricted to directed acyclic execution paths or process DAG subgraphs $G_{\text{DAG}} \subseteq G$, reachability defines a strict partial order over distinct activities ($u \neq v$), guaranteeing asymmetric sequence precedence ($u \rightsquigarrow_{G} v \implies v \not\rightsquigarrow_{G} u$).
+- **Prompt Serialization:** Directed sequence reachability, serialized gateway condition expressions $\mathcal{C}(e)$ (e.g. `[Score < 3.0]`), and swimlane role attributes $\mathcal{S}(v)$ are extracted via NetworkX and serialized into the LLM prompt context, constraining generative synthesis to valid execution paths without requiring runtime boolean evaluation inside the graph traversal engine.
+
+## 4. OFFLINE STATISTICAL RECOMPUTATION VS. LIVE LLM OUTPUT REGENERATION
 
 A fundamental methodological distinction is maintained between offline evaluation and live pipeline execution:
 
@@ -64,7 +73,7 @@ A fundamental methodological distinction is maintained between offline evaluatio
 
 ---
 
-## 4. EXACT COHORT RECONCILIATION & ACCOUNTING (388 MASTER RECORDS)
+## 5. EXACT COHORT RECONCILIATION & ACCOUNTING (388 MASTER RECORDS)
 
 The authoritative raw data file `results/master_results.csv` contains exactly **388 execution records**. The accounting across all evaluation cohorts is strictly verified as follows:
 
@@ -84,7 +93,7 @@ The authoritative raw data file `results/master_results.csv` contains exactly **
 
 ---
 
-## 5. METRIC DEFINITIONS & CONSTRUCT VALIDITY
+## 6. METRIC DEFINITIONS & CONSTRUCT VALIDITY
 
 Automated evaluation metrics do not invoke third-party unconstrained LLM-as-a-judge pipelines or official `ragas` / `bert_score` packages. They implement deterministic surrogate functions codified in [`evaluation/metrics/standard_rag_metrics.py`](evaluation/metrics/standard_rag_metrics.py):
 
@@ -99,7 +108,7 @@ Automated evaluation metrics do not invoke third-party unconstrained LLM-as-a-ju
 
 ---
 
-## 6. INDEPENDENT STATISTICAL VERIFICATION (TABLE 2 MATCH)
+## 7. INDEPENDENT STATISTICAL VERIFICATION (TABLE 2 MATCH)
 
 Direct recomputation across the 70 paired queries in `results/master_results.csv` against `results/statistical_tests.csv`:
 
@@ -120,7 +129,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 7. README 0.8585 VS. MANUSCRIPT 0.9883 PROVENANCE RESOLUTION
+## 8. README 0.8585 VS. MANUSCRIPT 0.9883 PROVENANCE RESOLUTION
 
 ### Forensic Evidence from Commit `6183cd3`
 - **Commit:** `6183cd3ef258f031f0446fea0c63b52cfd9b6ed7` (Nov 3, 2026, 03:34:37 UTC)
@@ -137,7 +146,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 8. MODEL IDENTITY RESOLUTION (QWEN BACKBONE)
+## 9. MODEL IDENTITY RESOLUTION (QWEN BACKBONE)
 
 - **API Endpoint Invoked:** `qwen/qwen3.8-27b` via Groq Cloud API (`https://api.groq.com/openai/v1`).
 - **Configuration File:** `evaluation/experiment_config.json`, line 32: `"model_identifier": "qwen/qwen3.8-27b"`.
@@ -147,7 +156,7 @@ $$\bar{D} = 0.10938, \quad s_D = 0.10120 \implies d_z = \frac{\bar{D}}{s_D} = \m
 
 ---
 
-## 9. ZENODO ARTIFACTS PROVENANCE
+## 10. ZENODO ARTIFACTS PROVENANCE
 
 - **Deposit Registry:** Zenodo Record ID `23242855`, Concept ID `23242854`, DOI `10.5281/zenodo.23242855`.
 - **Registered Asset:** `ICICOS_ProcessQA_Dataset.zip` (`83,176` bytes, MD5: `b64b9c5e6a8d581a52effdb35865f5e9`).
