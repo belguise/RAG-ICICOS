@@ -2,7 +2,7 @@
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Reproducibility: Verified](https://img.shields.io/badge/Reproducibility-Verified%20(58%2F58%20Tests)-brightgreen.svg)]()
+[![Reproducibility: Verified](https://img.shields.io/badge/Reproducibility-Verified%20(65%2F65%20Tests)-brightgreen.svg)]()
 [![Target: KBS Elsevier](https://img.shields.io/badge/Journal-Knowledge--Based%20Systems%20(Elsevier%20Q1)-orange.svg)]()
 
 > **Official Implementation and Experimental Verification Suite for:**  
@@ -79,16 +79,20 @@
 │   ├── METRIC_SPECIFICATION.md     # Mathematical & procedural definitions of all metrics
 │   ├── experiment_config.json      # Machine-readable experiment parameters
 │   └── DATASET_MANIFEST_CHECKSUMS.sha256 # Cryptographic integrity verification
-├── ICICOS_ProcessQA_Dataset/       # Canonical benchmark dataset & stratified evaluation cohorts
+├── ICICOS_ProcessQA_Dataset/       # Benchmark cohorts (distributed via Zenodo DOI: 10.5281/zenodo.23242855)
 │   ├── benchmark/                  # Master dataset (338 procedural query-answer pairs)
 │   └── cohorts/                    # Stratified subsets: primary_n70, procedural_n60, ablation_n20, cross_backbone_n34
-├── tests/                          # 58 comprehensive unit, integration & ablation regression tests
+├── tests/                          # 65 comprehensive unit, integration, security & regression tests
+│   ├── test_api_cors_security.py         # 7 API security, CORS origin & injection tests
 │   ├── test_full_pipeline_integration.py # 10 full execution path & architecture category tests
 │   ├── test_critic_self_repair.py        # 12 adversarial critic & repair convergence tests
 │   ├── test_evaluation_pipeline.py       # 13 reconstructed evaluation metric tests
-│   ├── test_scientific_consistency.py    # 10 statistical & numerical integrity tests
-│   └── ...                         # Domain unit tests (BPMN parsing, router, vector store)
-├── FINAL KBS FIX/                  # Authoritative journal manuscript & publication assets
+│   ├── test_scientific_consistency.py    # 20 statistical, numerical & metric integrity tests
+│   └── test_software_components.py       # 3 domain component & schema tests
+├── results/                        # Authoritative raw trial logs and statistical test outputs
+│   ├── master_results.csv          # Raw 388 experimental query execution records
+│   ├── statistical_tests.csv       # Precomputed inferential tests, effect sizes, and p-values
+│   └── final_comparison_table.csv  # 5-architecture comparative performance summary
 ├── CODE_VALIDATION_REPORT.md       # Full integration testing and code audit sign-off
 ├── FINAL_EXPERIMENT_EXECUTION_GUIDE.md # Step-by-step reproduction guide
 ├── REPRODUCIBILITY_CHECKLIST.md    # Journal reviewer & artifact auditor verification checklist
@@ -158,7 +162,7 @@ GROQ_API_KEY=your_groq_api_key_here
 GROQ_MODEL=qwen/qwen3.8-27b
 ```
 
-> **SECURITY GUARANTEE**: Tracked files contain zero secrets. `.gitignore` strictly excludes `.env` and credential caches.
+> **Security & Credential Hygiene**: Automated credential audits confirm that tracked repository files and commit history contain no active API keys or private credentials. Sensitive environment configurations (`.env`) and local credential caches are strictly excluded via `.gitignore`.
 
 ---
 
@@ -206,6 +210,8 @@ python scripts/verify_research_release.py
 ### 2. Running Automated Regression Suite (65 Tests)
 Execute all unit, integration, and security regression tests in isolated mock mode:
 ```bash
+python scripts/run_tests.py
+# Alternatively, using standard unittest discovery:
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 Expected output: **65 tests ran — OK (0 failures, 0 errors)**.
@@ -216,10 +222,10 @@ Recompute all descriptive statistics, paired Wilcoxon signed-rank tests, 10,000 
 python evaluation/statistical_analysis.py
 ```
 Outputs generated in `results/`:
-- `significance_tests.csv`: Exact paired p-values, Holm-Bonferroni adjusted p-values, Cohen's $d_z$ effect sizes.
-- `bootstrap_ci_differences.csv`: Paired bootstrap empirical 95% confidence intervals ($\Delta = \text{Agentic Hybrid RAG} - \text{Baseline}$).
-- `architecture_comparison_table.csv`: Mean and standard deviation across all 5 evaluation cohorts.
-- `ablation_table.csv`: Component contribution analysis (`without_router`, `without_bpmn`, `without_critic`).
+- `statistical_tests.csv`: Exact paired p-values, Holm-Bonferroni adjusted p-values, Cohen's $d_z$ effect sizes, and 95% bootstrap confidence intervals.
+- `final_comparison_table.csv`: Mean and standard deviation across all 5 evaluation cohorts.
+- `ablation_results.csv`: Component contribution analysis (`without_router`, `without_bpmn`, `without_critic`).
+- `cross_backbone_results.csv`: Cross-backbone Qwen evaluation results across 34 executions.
 
 ---
 
@@ -267,13 +273,12 @@ Detailed scientific documentation, execution guides, and audit reports are maint
 If you use the Agentic Hybrid RAG framework or the ICICoS ProcessQA benchmark in your research, please cite our manuscript:
 
 ```bibtex
-@article{agentic_hybrid_rag_2026,
-  author    = {Belguise, et al.},
-  title     = {Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering},
-  journal   = {Knowledge-Based Systems},
-  publisher = {Elsevier},
-  year      = {2026},
-  note      = {Manuscript prepared for submission}
+@misc{nuraini2026adaptive,
+  author       = {Nuraini, Lintang Aulia and Waspada, Indra and Fu'adi, Dhena Kamalia and Ramli, Ramona and Tantyoko, Henri and Kurniawan, Sandy and Purnama, Satriawan Rasyid},
+  title        = {Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering},
+  year         = {2026},
+  howpublished = {Preprint / Working Paper under review},
+  note         = {Manuscript submitted for peer review to Knowledge-Based Systems}
 }
 ```
 
