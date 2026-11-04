@@ -3,7 +3,7 @@
 **Target Venue:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Authoritative Git Commit SHA:** `4defd04678f66ea64f674ea0bf107fc7f907edc3`  
 **Date:** November 2026  
-**Auditor:** Senior ML Infrastructure & Experimental Reproducibility Engineer  
+**Scope:** Experimental Infrastructure & Reproducibility Verification  
 
 ---
 
@@ -22,7 +22,7 @@ Prior to this engineering pass:
 3. **Dataset Integrity & Cryptographic Checksums:** Inspected all 338 queries for schema compliance, duplicate IDs (0 found), and missing fields (0 found); generated authoritative SHA-256 checksums in [`evaluation/DATASET_MANIFEST_CHECKSUMS.sha256`](evaluation/DATASET_MANIFEST_CHECKSUMS.sha256).
 4. **Structured Experiment Provenance:** Formulated [`evaluation/run_metadata_schema.json`](evaluation/run_metadata_schema.json) and generated [`evaluation/reproducibility_run_metadata.json`](evaluation/reproducibility_run_metadata.json) linking the exact Git commit SHA, environment hashes, and verified metrics.
 5. **Dependency Pinning:** Extracted and generated [`environment.lock`](environment.lock) from the authoritative execution environment; reconciled [`requirements.txt`](requirements.txt) and [`pyproject.toml`](pyproject.toml).
-6. **Execution Cost & API Call Budget:** Calculated complete token requirements and API cost estimates for experimental verification runs, presented below for author approval.
+6. **Execution Cost & API Call Budget:** Calculated complete token requirements and estimated API costs for independent replication runs.
 
 ---
 
@@ -178,9 +178,9 @@ In adherence to Non-Negotiable Principle 1 & 4 (Never fabricate logs or claim ex
 
 ---
 
-## 8. Resource & Cost Estimation for Proposed Experimental Runs
+## 8. Resource & Cost Estimation for Benchmark Replication
 
-In strict accordance with the Master Directive, **no external API calls will be initiated without explicit author approval**. Below is the resource, token, and cost budget for executing candidate benchmark runs:
+To support independent replication planning without unexpected cloud inference costs, the resource, token, and cost budget for executing candidate benchmark runs is detailed below:
 
 ### Option A: Complete Primary Benchmark Re-evaluation ($N=70$ Queries, 5 Architectures)
 - **Target:** 70 queries across LLM-Only, Traditional RAG, Graph RAG, Static Hybrid RAG, and Proposed Agentic.
@@ -219,4 +219,4 @@ In strict accordance with the Master Directive, **no external API calls will be 
 - [x] Structured run metadata schema (`evaluation/run_metadata_schema.json`) and run record (`evaluation/reproducibility_run_metadata.json`) created.
 - [x] Exact environment locked in `environment.lock`; `pyproject.toml` and `requirements.txt` reconciled.
 - [x] Incomplete/truncated experiments forensically isolated and documented.
-- [x] API call budget and financial cost presented for author authorization.
+- [x] Replication resource requirements and estimated API costs documented.
