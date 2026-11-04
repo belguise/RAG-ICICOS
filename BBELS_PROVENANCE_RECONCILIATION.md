@@ -4,7 +4,7 @@
 **Date of Forensic Lock:** November 4, 2026  
 **Auditor:** Independent Scientific Reproducibility & Statistical Audit Unit (BBELS Mode)  
 **Target Manuscript:** *"Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering"*  
-**Framework:** ICICOS  
+**Framework:** Agentic Hybrid RAG  
 **Target Journal:** *Knowledge-Based Systems* (Elsevier)
 
 ---

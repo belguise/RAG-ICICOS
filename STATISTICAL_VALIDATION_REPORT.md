@@ -1,5 +1,5 @@
 # STATISTICAL VALIDATION & INFERENTIAL ANALYSIS REPORT
-**Project:** ICICOS — Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering  
+**Project:** Agentic Hybrid RAG — BPMN-Grounded Graph Reasoning for Explainable Institutional Process Question Answering  
 **Target Venue:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Authoritative Raw Data Source:** [`results/master_results.csv`](results/master_results.csv) (388 total query records)  
 **Primary Evaluated Sample:** $N = 70$ completely paired queries (350 executions across 5 architectures)  

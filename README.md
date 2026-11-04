@@ -1,4 +1,4 @@
-# ICICOS: Intent-Conditioned BPMN-SOP Hybrid RAG Framework
+# Agentic Hybrid RAG: BPMN-Grounded Graph Reasoning for Enterprise Process Question Answering
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -13,7 +13,7 @@
 
 ## Overview
 
-**ICICOS** is a research-grade Agentic Retrieval-Augmented Generation (RAG) framework engineered to resolve the operational dichotomy between textual policy manuals and topological process specifications. By synthesizing dense semantic vector retrieval over Standard Operating Procedure (SOP) texts with deterministic topological graph traversal over ISO/IEC 19510 Business Process Model and Notation (BPMN 2.0) XML graphs, ICICOS enables explainable, factually grounded, and structurally compliant question answering for enterprise and institutional governance.
+**Agentic Hybrid RAG** is a research-grade Retrieval-Augmented Generation (RAG) framework engineered to resolve the operational dichotomy between textual policy manuals and topological process specifications. By synthesizing dense semantic vector retrieval over Standard Operating Procedure (SOP) texts with deterministic topological graph traversal over ISO/IEC 19510 Business Process Model and Notation (BPMN 2.0) XML graphs, the proposed framework enables explainable, factually grounded, and structurally compliant question answering for enterprise and institutional governance.
 
 ### Architectural Core
 
@@ -65,7 +65,7 @@
 
 ```
 .
-├── src/agentic_rag_sop/            # Core ICICOS python package
+├── src/agentic_rag_sop/            # Core Agentic Hybrid RAG python package
 │   ├── agents/                     # Query Understanding, Intent Router, Adversarial Critic
 │   ├── bpmn/                       # BPMN 2.0 XML parser, attributed graph models, storage
 │   ├── retrieval/                  # SOP dense vector retriever and BPMN graph retriever
@@ -217,7 +217,7 @@ python evaluation/statistical_analysis.py
 ```
 Outputs generated in `results/`:
 - `significance_tests.csv`: Exact paired p-values, Holm-Bonferroni adjusted p-values, Cohen's $d_z$ effect sizes.
-- `bootstrap_ci_differences.csv`: Paired bootstrap empirical 95% confidence intervals ($\Delta = \text{ICICOS} - \text{Baseline}$).
+- `bootstrap_ci_differences.csv`: Paired bootstrap empirical 95% confidence intervals ($\Delta = \text{Agentic Hybrid RAG} - \text{Baseline}$).
 - `architecture_comparison_table.csv`: Mean and standard deviation across all 5 evaluation cohorts.
 - `ablation_table.csv`: Component contribution analysis (`without_router`, `without_bpmn`, `without_critic`).
 
@@ -227,7 +227,7 @@ Outputs generated in `results/`:
 
 All reported statistical conclusions are computed directly from raw per-query trial data ($N=70$ paired queries, 350 experimental runs):
 
-| Metric | LLM-Only | Traditional Vector RAG | Static Hybrid RAG | **ICICOS (Proposed)** | Wilcoxon $p_{\text{adj}}$ | Cohen's $d_z$ | Paired Bootstrap 95% CI |
+| Metric | LLM-Only | Traditional Vector RAG | Static Hybrid RAG | **Agentic Hybrid RAG (Proposed)** | Wilcoxon $p_{\text{adj}}$ | Cohen's $d_z$ | Paired Bootstrap 95% CI |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Faithfulness ($F_{\text{faith}}$)** | N/A* | 0.8143 | 0.8789 | **0.9883** | **$5.95 \times 10^{-10}$** | **1.0809** (Large) | $[+0.0865, +0.1332]$ |
 | **Evidence-Ungrounded Rate (EUSR)** $\downarrow$ | N/A* | 18.5% | 12.1% | **1.2% (0.0116)** | **$5.50 \times 10^{-10}$** | **-1.0828** (Large) | $[-0.1332, -0.0864]$ |
@@ -264,10 +264,10 @@ Detailed scientific documentation, execution guides, and audit reports are maint
 
 ## Citation & Academic Attribution
 
-If you use ICICOS in your research, please cite our manuscript:
+If you use the Agentic Hybrid RAG framework or the ICICoS ProcessQA benchmark in your research, please cite our manuscript:
 
 ```bibtex
-@article{icicos2026kbs,
+@article{agentic_hybrid_rag_2026,
   author    = {Belguise, et al.},
   title     = {Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering},
   journal   = {Knowledge-Based Systems},

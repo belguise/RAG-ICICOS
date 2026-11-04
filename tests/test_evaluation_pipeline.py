@@ -1,7 +1,7 @@
 """
 Research-Grade Evaluation Pipeline Unit Test Suite.
 Validates metric accuracy, mathematical consistency, error handling, and edge cases
-for the ICICOS evaluation engine.
+for the Agentic Hybrid RAG evaluation engine.
 
 Test Matrix:
 1. Empty Answer

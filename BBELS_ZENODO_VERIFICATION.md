@@ -3,7 +3,7 @@
 
 **Target Journal:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Manuscript Title:** *Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering*  
-**Framework Name:** ICICOS  
+**Framework Name:** Agentic Hybrid RAG  
 **Author:** Senior Scientific Reproducibility Auditor & Research Software Verification Engineer (BBELS Mode)  
 **Date of Audit:** November 4, 2026  
 **Final Status:** LOCAL ARTIFACT 100% HASH-VERIFIED / REMOTE LIVE API UNVERIFIED (CLOUDFLARE HTTP 403)

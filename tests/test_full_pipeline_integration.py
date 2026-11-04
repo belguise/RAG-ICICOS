@@ -1,5 +1,5 @@
 """
-Comprehensive Integration, Architecture, and Ablation Test Suite for ICICOS.
+Comprehensive Integration, Architecture, and Ablation Test Suite for Agentic Hybrid RAG.
 Evaluates the complete research pipeline:
 1. End-to-end execution: Query -> Understanding -> Router -> Dual Retrieval -> Fusion -> Generation -> Critic -> Self-Repair -> Source Attribution -> Reconstructed Evaluation.
 2. Architecture & Question Categories:
@@ -137,7 +137,7 @@ class MockBPMNRetriever:
 
 
 class TestFullPipelineIntegration(unittest.TestCase):
-    """End-to-end integration and architecture tests for the complete ICICOS pipeline."""
+    """End-to-end integration and architecture tests for the complete Agentic Hybrid RAG pipeline."""
 
     def setUp(self):
         self.sop_retriever = MockSOPRetriever()

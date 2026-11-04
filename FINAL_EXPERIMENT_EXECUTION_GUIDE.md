@@ -1,7 +1,7 @@
-# FINAL EXPERIMENT EXECUTION GUIDE: ICICOS EVALUATION & REPRODUCIBILITY
+# FINAL EXPERIMENT EXECUTION GUIDE: AGENTIC HYBRID RAG EVALUATION & REPRODUCIBILITY
 
 **Target Publication:** *Knowledge-Based Systems* (Elsevier, Q1)  
-**Project:** ICICOS (Intent-Conditioned BPMN-SOP Hybrid RAG Framework)  
+**Project:** Agentic Hybrid RAG (BPMN-Grounded Graph Reasoning for Enterprise Process Question Answering)  
 **Authoritative SHA:** `4defd04678f66ea64f674ea0bf107fc7f907edc3`  
 **Guide Version:** 2.0.0 (Post-Audit Code Freeze)  
 
@@ -155,7 +155,7 @@ python evaluation/statistical_analysis.py
 | Benchmark Cohort | Queries ($N$) | Architectures Evaluated | Total Pipeline Runs | Expected LLM Calls (Draft + Critic + Repair) | Estimated API Cost (USD) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Primary Benchmark** | 70 | 5 | 350 | ~700 - 850 | ~$1.20 - $1.80 |
-| **Procedural Diagnostic** | 60 | 1 (ICICOS) | 60 | ~120 - 150 | ~$0.25 - $0.35 |
+| **Procedural Diagnostic** | 60 | 1 (Agentic Hybrid RAG) | 60 | ~120 - 150 | ~$0.25 - $0.35 |
 | **Ablation Study** | 20 | 4 variants | 80 | ~120 - 160 | ~$0.20 - $0.30 |
 | **Cross-Backbone Qwen**| 34 (7 unique) | 2 | 34 | ~70 - 85 | Free tier (Groq) |
 | **Total Full Run** | **184** | — | **524** | **~1,010 - 1,245** | **~$1.65 - $2.45** |
@@ -225,5 +225,5 @@ The evaluation pipeline (`evaluation/metrics/reconstructed_evaluator.py`) execut
 - **Cause**: Running parallel test runners accessing `data/vector_store` simultaneously.
 - **Remedy**: Run benchmarks sequentially or assign separate `CHROMA_PERSIST_DIR` paths per worker process.
 
-### Q3: Why does Answer Relevancy show a slight drop (-0.0354) for ICICOS?
+### Q3: Why does Answer Relevancy show a slight drop (-0.0354) for Agentic Hybrid RAG?
 - **Scientific Rationale**: As detailed in the manuscript and `STATISTICAL_VALIDATION_REPORT.md`, the failure-seeking critic penalizes over-general or verbose conversational filler in favor of strict, concise compliance. When family-wise error rate is controlled via Holm-Bonferroni correction, this difference is **statistically non-significant** ($p_{\text{adj}} = 0.1030 > 0.05$).

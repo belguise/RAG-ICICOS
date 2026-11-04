@@ -1,6 +1,6 @@
-# CODE VALIDATION REPORT: ICICOS RESEARCH PIPELINE
+# CODE VALIDATION REPORT: AGENTIC HYBRID RAG RESEARCH PIPELINE
 
-**Manuscript Title:** ICICOS: An Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering  
+**Manuscript Title:** Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering  
 **Target Journal:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Audit Date:** November 3, 2026  
 **Auditor:** Senior Research Reproducibility Engineer & Systems Architect  
@@ -208,4 +208,4 @@ python -m unittest discover -s tests -p "test_*.py"
 
 ## 8. Conclusion and Sign-Off
 
-The ICICOS software pipeline is robust, reproducible, and fully consistent with the theoretical and empirical claims of the *Knowledge-Based Systems* manuscript. All code quality gates have been satisfied.
+The Agentic Hybrid RAG software pipeline is robust, reproducible, and fully consistent with the theoretical and empirical claims of the *Knowledge-Based Systems* manuscript. All code quality gates have been satisfied.

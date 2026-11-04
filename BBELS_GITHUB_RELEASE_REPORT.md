@@ -3,7 +3,7 @@
 
 **Target Journal:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Canonical Manuscript Title:** *"Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering"*  
-**Framework System Name:** ICICOS  
+**Framework System Name:** Agentic Hybrid RAG  
 **Lead Engineer:** Senior DevSecOps & Git Release Engineer (BBELS Ultra-Maximum Mode)  
 **Execution Timestamp:** November 4, 2026, 02:10:00 UTC+7  
 **Publication Status:** **SUCCESSFULLY COMMITTED & PUSHED TO OFFICIAL GITHUB REMOTE**

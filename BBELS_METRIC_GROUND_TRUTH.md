@@ -3,7 +3,7 @@
 
 **Date of Verification:** November 4, 2026  
 **Auditor:** Scientific Methodology & Software Verification Unit (BBELS Mode)  
-**Target Codebase:** ICICOS Evaluation Suite  
+**Target Codebase:** Agentic Hybrid RAG Evaluation Suite  
 
 ---
 

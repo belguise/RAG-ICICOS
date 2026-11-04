@@ -3,7 +3,7 @@
 
 **Target Journal:** *Knowledge-Based Systems* (Elsevier, Impact Factor: ~8.8, CiteScore: ~17.5, Q1)  
 **Canonical Manuscript Title:** *"Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering"*  
-**Framework System Name:** ICICOS  
+**Framework System Name:** Agentic Hybrid RAG  
 **Lead Auditor:** Senior Research Scientist, Computational Reproducibility Auditor & DevSecOps Lead (BBELS Ultra-Maximum Mode)  
 **Evaluation Date:** November 4, 2026, 02:12:00 UTC+7  
 **Overall Determination:** **GREEN LIGHT — GITHUB RELEASE ACCOMPLISHED / MANUSCRIPT SUBMISSION CANDIDATE READY**

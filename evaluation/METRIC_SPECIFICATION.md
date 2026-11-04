@@ -1,5 +1,5 @@
-# ICICOS METRIC SPECIFICATION: SCIENTIFIC DEFINITION, FORMULATIONS, AND IMPLEMENTATION AUDIT
-**Project:** ICICOS (Intent-Conditioned BPMN-SOP Hybrid RAG Framework)  
+# AGENTIC HYBRID RAG METRIC SPECIFICATION: SCIENTIFIC DEFINITION, FORMULATIONS, AND IMPLEMENTATION AUDIT
+**Project:** Agentic Hybrid RAG (BPMN-Grounded Graph Reasoning for Enterprise Process Question Answering)  
 **Target Venue:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Document Purpose:** Authoritative metric specification defining mathematical formulations, input variables, reference requirements, actual Python implementations, thresholds, edge-case protocols, and methodological boundaries for all evaluation metrics.
 
@@ -7,7 +7,7 @@
 
 ## 1. TAXONOMY AND EXECUTIVE SUMMARY
 
-The ICICOS evaluation framework spans three complementary analytical dimensions:
+The Agentic Hybrid RAG evaluation framework spans three complementary analytical dimensions:
 1. **Primary Factual Grounding & Retrieval Alignment**: Faithfulness, Answer Relevancy, Context Precision, Context Recall.
 2. **Semantic Text Generation Quality**: Semantic Alignment F1 (SA-F1 / Sentence-BERT F1), Evidence-Ungrounded Sentence Rate (EUSR) / Hallucination Rate, Wall-Clock Latency.
 3. **Procedural & Topological Graph Reasoning**: Process Path Accuracy (PPA), Gateway Decision Accuracy (GDA), Actor Attribution Accuracy/Recall (AAA/AAR).

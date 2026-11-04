@@ -1,5 +1,5 @@
 # REPRODUCIBILITY REPORT: EXPERIMENTAL CONFIGURATION & RESEARCH INTEGRITY HARDENING
-**Project:** ICICOS — Intent-Conditioned BPMN-SOP Hybrid RAG Framework for Explainable Institutional Process Question Answering  
+**Project:** Agentic Hybrid RAG — BPMN-Grounded Graph Reasoning for Explainable Institutional Process Question Answering  
 **Target Venue:** *Knowledge-Based Systems* (Elsevier, Q1)  
 **Authoritative Git Commit SHA:** `4defd04678f66ea64f674ea0bf107fc7f907edc3`  
 **Date:** November 2026  
@@ -49,7 +49,7 @@ Scientific integrity requires explicitly distinguishing between three independen
 
 ## 3. Sampling Manifests & Cohort Architecture
 
-The ICICOS evaluation benchmark is organized into five verifiable, documented cohorts derived from the canonical 338-query master corpus.
+The Agentic Hybrid RAG evaluation benchmark is organized into five verifiable, documented cohorts derived from the canonical 338-query master corpus.
 
 ```
                           ┌────────────────────────────────────────────────────────┐
