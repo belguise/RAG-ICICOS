@@ -93,11 +93,7 @@
 │   ├── master_results.csv          # Raw 388 experimental query execution records
 │   ├── statistical_tests.csv       # Precomputed inferential tests, effect sizes, and p-values
 │   └── final_comparison_table.csv  # 5-architecture comparative performance summary
-├── CODE_VALIDATION_REPORT.md       # Full integration testing and code audit sign-off
-├── FINAL_EXPERIMENT_EXECUTION_GUIDE.md # Step-by-step reproduction guide
-├── REPRODUCIBILITY_CHECKLIST.md    # Journal reviewer & artifact auditor verification checklist
-├── REPRODUCIBILITY_REPORT.md       # Forensic audit and environment freeze report
-├── STATISTICAL_VALIDATION_REPORT.md# Detailed inferential statistical findings
+├── REPRODUCIBILITY_REPORT.md       # Forensic audit, environment freeze, and reproducibility report
 ├── requirements.txt                # Pinned primary package dependencies
 ├── environment.lock                # Pinned 154-package reproducible environment lockfile
 └── pyproject.toml                  # Standard Python packaging configuration (v0.2.0)
@@ -257,14 +253,10 @@ The benchmark datasets, attributed process graphs, and cohort manifests are depo
 
 ## Documentation Index
 
-Detailed scientific documentation, execution guides, and audit reports are maintained in the repository:
+Detailed scientific documentation and reproducibility specifications are maintained in the repository:
 
-1. [CODE_VALIDATION_REPORT.md](CODE_VALIDATION_REPORT.md): Comprehensive integration testing, architecture category verification, and static audit sign-off.
-2. [FINAL_EXPERIMENT_EXECUTION_GUIDE.md](FINAL_EXPERIMENT_EXECUTION_GUIDE.md): Complete operational instructions for benchmark execution, cross-backbone testing, and evaluation replication.
-3. [REPRODUCIBILITY_CHECKLIST.md](REPRODUCIBILITY_CHECKLIST.md): Research reproducibility checklist adhering to Nature/ACM/Elsevier artifact evaluation standards.
-4. [REPRODUCIBILITY_REPORT.md](REPRODUCIBILITY_REPORT.md): Experimental environment audit, parameter provenance, and dataset cohort specifications.
-5. [STATISTICAL_VALIDATION_REPORT.md](STATISTICAL_VALIDATION_REPORT.md): Exhaustive paired inferential statistics, bootstrap distributions, and latency breakdowns.
-6. [evaluation/METRIC_SPECIFICATION.md](evaluation/METRIC_SPECIFICATION.md): Mathematical formulations, edge cases, and algorithmic implementations of all evaluation metrics.
+1. [REPRODUCIBILITY_REPORT.md](REPRODUCIBILITY_REPORT.md): Experimental environment audit, parameter provenance, cohort specifications, and reproducibility guidelines.
+2. [evaluation/METRIC_SPECIFICATION.md](evaluation/METRIC_SPECIFICATION.md): Mathematical formulations, edge cases, and algorithmic implementations of all evaluation metrics.
 
 ---
 
