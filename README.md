@@ -79,9 +79,6 @@
 │   ├── METRIC_SPECIFICATION.md     # Mathematical & procedural definitions of all metrics
 │   ├── experiment_config.json      # Machine-readable experiment parameters
 │   └── DATASET_MANIFEST_CHECKSUMS.sha256 # Cryptographic integrity verification
-├── ICICOS_ProcessQA_Dataset/       # Benchmark cohorts (distributed via Zenodo DOI: 10.5281/zenodo.23242855)
-│   ├── benchmark/                  # Master dataset (338 procedural query-answer pairs)
-│   └── cohorts/                    # Stratified subsets: primary_n70, procedural_n60, ablation_n20, cross_backbone_n34
 ├── tests/                          # 65 comprehensive unit, integration, security & regression tests
 │   ├── test_api_cors_security.py         # 7 API security, CORS origin & injection tests
 │   ├── test_full_pipeline_integration.py # 10 full execution path & architecture category tests
@@ -97,6 +94,12 @@
 ├── requirements.txt                # Pinned primary package dependencies
 ├── environment.lock                # Pinned 154-package reproducible environment lockfile
 └── pyproject.toml                  # Standard Python packaging configuration (v0.2.0)
+```
+
+```text
+External research dataset (not included in Git checkout):
+  ICICoS ProcessQA benchmark and evaluation cohorts
+  Zenodo DOI: 10.5281/zenodo.23242855
 ```
 
 ---
@@ -269,8 +272,8 @@ If you use the Agentic Hybrid RAG framework or the ICICoS ProcessQA benchmark in
   author       = {Nuraini, Lintang Aulia and Waspada, Indra and Fu'adi, Dhena Kamalia and Ramli, Ramona and Tantyoko, Henri and Kurniawan, Sandy and Purnama, Satriawan Rasyid},
   title        = {Adaptive Agentic Hybrid RAG with BPMN-Grounded Graph Reasoning for Explainable Enterprise Process Question Answering},
   year         = {2026},
-  howpublished = {Preprint / Working Paper under review},
-  note         = {Manuscript submitted for peer review to Knowledge-Based Systems}
+  howpublished = {Manuscript in preparation},
+  note         = {Prepared for submission to Knowledge-Based Systems}
 }
 ```
 
