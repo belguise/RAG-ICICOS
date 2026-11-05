@@ -305,11 +305,11 @@ def run_statistical_analysis():
             holm_counter += 1
             holm_str = f"{holm_p:.4e}"
             role = "Primary Outcome (Holm-corrected)"
+            sig_marker = get_significance_marker(holm_p)
         else:
             holm_str = "N/A (Secondary Diagnostic)"
             role = "Secondary Diagnostic Metric"
-
-        sig_marker = get_significance_marker(r["p_w"])
+            sig_marker = get_significance_marker(r["p_w"])
 
         test_rows.append({
             "Metric": r["title"],

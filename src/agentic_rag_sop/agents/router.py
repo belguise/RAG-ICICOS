@@ -72,9 +72,14 @@ class RouterAgent:
     """Agent that classifies intent and directs queries to optimal retrievers."""
 
     def __init__(self, llm: Optional[BaseChatModel] = None):
-        self.llm = llm or get_llm()
-        self.prompt = PromptTemplate.from_template(ROUTER_PROMPT)
-        self._chain = self.prompt | self.llm
+        try:
+            self.llm = llm or get_llm()
+            self.prompt = PromptTemplate.from_template(ROUTER_PROMPT)
+            self._chain = self.prompt | self.llm
+        except Exception:
+            self.llm = None
+            self.prompt = None
+            self._chain = None
 
     def _classify_heuristics(self, query: str) -> Optional[RouterDecision]:
         """Fast, deterministic rule-based pre-routing with complementary secondary support."""

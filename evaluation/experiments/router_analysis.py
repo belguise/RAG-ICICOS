@@ -82,38 +82,16 @@ def analyze_router_efficiency(
 
         category_counts[category] += 1
 
-        # Evaluate router decision (deterministic fast-path with robust fallback)
+        # Evaluate router decision (strictly input text only; zero ground-truth leakage)
         decision = router._classify_heuristics(question)
         if decision is None:
-            q_low = question.lower()
-            if any(w in q_low for w in ["dokumen", "syarat", "lampiran", "berkas", "persyaratan"]) or category == "document_requirement":
-                decision = RouterDecision(
-                    intent="document_requirement",
-                    knowledge_source="SOP",
-                    secondary_source="BPMN",
-                    reason="Document and attachment checklist verified through SOP textual standard",
-                )
-            elif category == "workflow":
-                decision = RouterDecision(
-                    intent="workflow_question",
-                    knowledge_source="BPMN",
-                    secondary_source="SOP",
-                    reason="Workflow transition inquiry mapped to BPMN graph sequence",
-                )
-            elif category == "decision_gateway":
-                decision = RouterDecision(
-                    intent="workflow_question",
-                    knowledge_source="BPMN",
-                    secondary_source="SOP",
-                    reason="Decision gateway branching resolved via BPMN XOR node exploration",
-                )
-            else:
-                decision = RouterDecision(
-                    intent="general_information",
-                    knowledge_source="BOTH",
-                    secondary_source=None,
-                    reason="Hybrid query routed to dual knowledge sources for unified fusion",
-                )
+            # Production architectural fail-safe: route unclassified queries to BOTH
+            decision = RouterDecision(
+                intent="general_information",
+                knowledge_source="BOTH",
+                secondary_source=None,
+                reason="Enterprise fail-safe routing to BOTH: intent ambiguous under heuristic filter",
+            )
 
         pred_src = decision.knowledge_source.upper()
         pred_sec = decision.secondary_source.upper() if decision.secondary_source else None
