@@ -177,12 +177,31 @@ class CriticVerificationAgent:
     """
     Independent adversarial verification agent evaluating answers against retrieved facts.
     Guarantees strict factual grounding, ICICoS domain integrity, and BPMN/SOP correctness.
+    Enforces minimum confidence threshold for formal verification certification.
     """
 
-    def __init__(self, llm: Optional[BaseChatModel] = None):
-        self.llm = llm or get_llm()
-        self.prompt = PromptTemplate.from_template(CRITIC_PROMPT)
-        self._chain = self.prompt | self.llm
+    def __init__(
+        self,
+        llm: Optional[BaseChatModel] = None,
+        confidence_threshold: Optional[float] = None,
+    ):
+        try:
+            self.llm = llm or get_llm()
+            self.prompt = PromptTemplate.from_template(CRITIC_PROMPT)
+            self._chain = self.prompt | self.llm
+        except Exception:
+            self.llm = None
+            self.prompt = None
+            self._chain = None
+
+        if confidence_threshold is not None:
+            self.confidence_threshold = float(confidence_threshold)
+        else:
+            try:
+                from agentic_rag_sop.config.settings import get_settings
+                self.confidence_threshold = float(get_settings().CRITIC_CONFIDENCE_THRESHOLD)
+            except Exception:
+                self.confidence_threshold = 0.85
 
     def _fast_deterministic_check(
         self,
@@ -344,6 +363,19 @@ class CriticVerificationAgent:
             else:
                 data = json.loads(content)
 
+            # Defensive normalization: ensure required fields exist and are well-typed
+            if "is_valid" not in data:
+                data["is_valid"] = False
+
+            raw_conf = data.get("confidence_score")
+            try:
+                if raw_conf is not None:
+                    data["confidence_score"] = max(0.0, min(1.0, float(raw_conf)))
+                else:
+                    data["confidence_score"] = 0.0
+            except (ValueError, TypeError):
+                data["confidence_score"] = 0.0
+
             decision = CriticDecision.model_validate(data)
 
             # Determine failed checks across all 5 verification dimensions
@@ -360,10 +392,28 @@ class CriticVerificationAgent:
 
             decision.failed_checks = failed_dims
 
-            # Strict Safety Gate: is_valid is True ONLY if NO dimension failed
-            if failed_dims:
+            # Strict Certification Safety Gate:
+            # AuditPass = all 5 critical dimensions not FAILED AND confidence >= CRITIC_CONFIDENCE_THRESHOLD
+            meets_confidence = False
+            try:
+                if decision.confidence_score is not None:
+                    c_val = float(decision.confidence_score)
+                    if c_val >= self.confidence_threshold:
+                        meets_confidence = True
+            except (ValueError, TypeError):
+                meets_confidence = False
+
+            if failed_dims or not meets_confidence:
                 decision.is_valid = False
                 decision.verification_status = VerificationStatus.REJECTED
+                if not meets_confidence and "confidence_threshold" not in decision.failed_checks:
+                    decision.failed_checks.append("confidence_threshold")
+                    if not decision.suggested_revision_instructions:
+                        conf_str = f"{decision.confidence_score:.3f}" if isinstance(decision.confidence_score, (int, float)) else str(decision.confidence_score)
+                        decision.suggested_revision_instructions = (
+                            f"Audit confidence ({conf_str}) is below the required certification "
+                            f"threshold ({self.confidence_threshold:.2f}). Re-ground draft claims against retrieved evidence."
+                        )
             else:
                 decision.is_valid = True
                 decision.verification_status = VerificationStatus.VERIFIED
