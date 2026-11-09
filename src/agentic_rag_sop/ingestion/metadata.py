@@ -1,10 +1,11 @@
 """
 Metadata schema and enrichment utilities for SOP and BPMN chunks.
-Enforces the 7 required metadata fields:
+Enforces the 8 required metadata fields defined in ChunkMetadata:
 - document_name
 - document_type
 - category
 - process_name
+- department
 - actor
 - page_number
 - chunk_index
@@ -95,7 +96,7 @@ def enrich_chunk_metadata(
     default_document_type: str = "sop",
 ) -> Dict[str, Any]:
     """
-    Enrich raw chunk metadata to guarantee all 7 required fields are present and populated.
+    Enrich raw chunk metadata to guarantee all 8 required fields are present and populated.
     """
     # 1. Document Name
     doc_name = (

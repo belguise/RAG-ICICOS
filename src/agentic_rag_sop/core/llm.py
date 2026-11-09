@@ -1,7 +1,7 @@
 """
 Gemini LLM Provider.
 Initializes ChatGoogleGenerativeAI with strict parameter defaults
-for zero-hallucination procedural question answering.
+for grounded enterprise procedural question answering.
 """
 
 from typing import Optional
@@ -19,8 +19,9 @@ def get_llm(
     Initialize and return Google Gemini Chat Model.
     
     Args:
-        model_name: Model identifier (defaults to settings.GEMINI_MODEL, e.g. gemini-1.5-flash)
-        temperature: Sampling temperature (defaults to settings.LLM_TEMPERATURE, 0.0 for deterministic answers)
+        model_name: Model identifier (defaults to settings.GEMINI_MODEL, e.g. gemini-3.5-flash-lite)
+        temperature: Sampling temperature (defaults to settings.LLM_TEMPERATURE, 0.0 requested).
+            Note: Provider endpoint gemini-3.5-flash-lite enforces fixed sampling defaults.
         streaming: Whether to stream tokens
     """
     settings = get_settings()

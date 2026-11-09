@@ -2,7 +2,7 @@
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Reproducibility: Verified](https://img.shields.io/badge/Reproducibility-Verified%20(65%2F65%20Tests)-brightgreen.svg)]()
+[![Test Suite: Passing](https://img.shields.io/badge/Test%20Suite-91%20Passed-brightgreen.svg)]()
 [![Target: KBS Elsevier](https://img.shields.io/badge/Journal-Knowledge--Based%20Systems%20(Elsevier%20Q1)-orange.svg)]()
 
 > **Official Implementation and Experimental Verification Suite for:**  
@@ -49,15 +49,16 @@
           (Source Attribution)      (Max 2 Revision Cycles)
 ```
 
-1. **Adaptive Intent Router**: Categorizes operational queries across 4 discrete intent classes (`document_requirement`, `workflow`, `decision_gateway`, `hybrid`) using two-stage heuristic-gated schema classification. These 4 intents map dynamically onto 3 discrete retrieval allocation profiles:
-   - **SOP-Dominant** ($\\langle k_{\\text{sop}}=6, k_{\\text{bpmn}}=2 \\rangle$): for `document_requirement` queries focusing on policy rules and checklist compliance.
-   - **BPMN-Dominant** ($\\langle k_{\\text{sop}}=3, k_{\\text{bpmn}}=4 \\rangle$): for `workflow` and `decision_gateway` queries focusing on process execution order and branch logic.
-   - **Balanced Hybrid** ($\\langle k_{\\text{sop}}=5, k_{\\text{bpmn}}=3 \\rangle$): for complex `hybrid` queries requiring extensive joint text and graph evidence.
+1. **Adaptive Intent Router**: Categorizes operational queries across 5 operational intent classes (`document_requirement`, `payment_question`, `procedural_question`, `workflow_question`, `general_information`) using two-stage heuristic-first schema classification with LLM fallback. These 5 operational intents map dynamically onto 3 discrete retrieval target profiles:
+   - **SOP-Dominant** ($\langle k_{\text{sop}}=6, k_{\text{bpmn}}=2 \rangle$): for `document_requirement` and `payment_question` queries focusing on administrative policy rules and checklist compliance with BPMN context support.
+   - **BPMN-Dominant** ($\langle k_{\text{sop}}=3, k_{\text{bpmn}}=4 \rangle$): for `workflow_question` queries focusing on process execution order and branch logic with SOP textual support.
+   - **Balanced Hybrid** ($\langle k_{\text{sop}}=5, k_{\text{bpmn}}=3 \rangle$): for procedural policies, decision gateways, or general information queries requiring balanced dual-channel evidence.
+   *(Note: The ICICoS ProcessQA evaluation benchmark partitions test queries into 4 benchmark evaluation categories: `document_requirement`, `workflow`, `decision_gateway`, and `hybrid`.)*
 2. **Dual-Channel Retrieval Engine**:
-   - **Textual Channel**: Dense semantic similarity search over chunked SOP text collections persisted in ChromaDB.
-   - **Structural Channel**: Topological graph retrieval extracting directed execution traces, decision gateway guards, and swimlane role attributions from BPMN 2.0 XML graphs.
+   - **Textual Channel (SOP Ingestion & Dense Retrieval)**: Ingests narrative SOP texts using recursive character-based splitting with paragraph-, line-, and sentence-level separators, preserving 8 metadata attributes (`document_name`, `document_type`, `category`, `process_name`, `department`, `actor`, `page_number`, `chunk_index`) for dense semantic search in ChromaDB.
+   - **Structural Channel (BPMN Graph Reasoning)**: Retrieves process models represented through a canonical `BPMNProcessGraph` intermediate representation, performing directed topological reasoning (successor transition, XOR decision gateway branching, and predecessor step counting) combined with chronological whole-process narrative sequence serialization.
 3. **Cross-Modal Context Fusion**: Unifies unstructured textual clauses with structured sequence flows into a topologically aligned prompt representation.
-4. **Failure-Seeking Adversarial Critic & Bounded Self-Repair**: A multi-dimensional evaluator inspecting factual grounding, domain compliance, workflow correctness, SOP consistency, and answer completeness, triggering bounded revision iterations (maximum 2 cycles) upon detected divergence.
+4. **Failure-Seeking Adversarial Critic & Bounded Self-Repair**: A multi-dimensional evaluator inspecting factual grounding, domain compliance, workflow correctness, SOP consistency, and answer completeness, enforcing certification ($c(A) \ge 0.85$ and no failed checks) and triggering bounded revision iterations (maximum 2 cycles) upon detected divergence.
 
 ---
 
@@ -79,11 +80,14 @@
 │   ├── METRIC_SPECIFICATION.md     # Mathematical & procedural definitions of all metrics
 │   ├── experiment_config.json      # Machine-readable experiment parameters
 │   └── DATASET_MANIFEST_CHECKSUMS.sha256 # Cryptographic integrity verification
-├── tests/                          # 65 comprehensive unit, integration, security & regression tests
+├── tests/                          # 91 comprehensive unit, integration, security & regression tests
 │   ├── test_api_cors_security.py         # 7 API security, CORS origin & injection tests
-│   ├── test_full_pipeline_integration.py # 10 full execution path & architecture category tests
+│   ├── test_bpmn_graph_semantics.py      # 7 directed BPMN graph semantics, cycles & serialization tests
 │   ├── test_critic_self_repair.py        # 12 adversarial critic & repair convergence tests
+│   ├── test_critic_threshold_regression.py # 9 critic confidence threshold & certification gate tests
 │   ├── test_evaluation_pipeline.py       # 13 reconstructed evaluation metric tests
+│   ├── test_full_pipeline_integration.py # 10 full execution path & architecture category tests
+│   ├── test_router_integrity_regression.py # 10 router leakage & quota allocation regression tests
 │   ├── test_scientific_consistency.py    # 20 statistical, numerical & metric integrity tests
 │   └── test_software_components.py       # 3 domain component & schema tests
 ├── results/                        # Authoritative raw trial logs and statistical test outputs
@@ -198,7 +202,7 @@ Interactive OpenAPI documentation will be accessible at `http://localhost:8000/d
 
 > **NOTE ON OFFLINE VERIFICATION & REPRODUCIBILITY**:  
 > The verification scripts (`scripts/verify_research_release.py` and `evaluation/statistical_analysis.py`) execute **deterministic offline statistical recomputations directly from stored trial data** (`results/master_results.csv`, `results/benchmark_results_primary_gemini.json`). They do **not** invoke external model APIs or perform live generation, allowing reviewers to verify all statistical findings locally and instantly without API credentials or inference costs.  
-> The underlying primary benchmark was executed using **Google Gemini 3.5 Flash-Lite** (`gemini-3.5-flash-lite`, Generative Language API v1beta) with greedy decoding ($T=0.0$). The configured `seed=42` governs dataset cohort stratification and the 10,000 paired bootstrap resampling iterations; cloud foundation-model APIs do not support hardware-level bitwise generation seeds.
+> The underlying primary benchmark was executed using **Google Gemini 3.5 Flash-Lite** (`gemini-3.5-flash-lite`, Generative Language API v1beta) with requested temperature $T=0.0$. Sampling metadata records $top\_p=1.0$; note that this provider endpoint enforces fixed sampling defaults. The configured `seed=42` governs dataset cohort stratification and the 10,000 paired bootstrap resampling iterations; cloud foundation-model APIs do not support hardware-level bitwise generation seeds.
 
 ### 1. One-Click Reviewer Verification Script
 To independently recompute all primary descriptive and inferential statistics directly from stored raw per-query trial observations and verify mathematical consistency against the manuscript without external API calls (offline mode):
@@ -206,14 +210,14 @@ To independently recompute all primary descriptive and inferential statistics di
 python scripts/verify_research_release.py
 ```
 
-### 2. Running Automated Regression Suite (65 Tests)
+### 2. Running Automated Regression Suite (91 Tests)
 Execute all unit, integration, and security regression tests in isolated mock mode:
 ```bash
 python scripts/run_tests.py
 # Alternatively, using standard unittest discovery:
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
-Expected output: **65 tests ran — OK (0 failures, 0 errors)**.
+Expected output: **91 tests ran — OK (0 failures, 0 errors)**.
 
 ### 3. Running Statistical Analysis Engine
 Recompute all descriptive statistics, paired Wilcoxon signed-rank tests, 10,000 paired bootstrap 95% confidence intervals, and Holm-Bonferroni multiplicity corrections directly from raw per-query experimental trials:
@@ -241,6 +245,10 @@ All reported statistical conclusions are computed directly from raw per-query tr
 | **Context Recall ($R_{\text{ctx}}$)** | N/A* | **1.0000** | **1.0000** | **1.0000** | $1.0000$ (ns) | N/A* | $[+0.0000, +0.0000]$ |
 | **Semantic Alignment F1 (SA-F1)** | 0.4721 | 0.5566 | **0.5718** | 0.5645 | $0.5209$ (ns) | $-0.1176$ | $[-0.0217, +0.0073]$ |
 | **End-to-End Latency (s)** $\downarrow$ | 3.66 | 3.80 | **3.05** | 10.76 | **$2.49 \times 10^{-12}$** | 1.2560 | $[+6.3874, +9.2363]$ |
+
+### Critic Decision Rule Provenance: Historical vs. Current Implementation
+- **Historical Benchmark Execution ($N=70$ queries, 350 runs)**: The evaluation records in `results/master_results.csv` and `results/benchmark_results_primary_gemini.json` reflect execution where the Critic agent performed adversarial inspection across the 5 categorical checks (`factual_grounding`, `domain_compliance`, `workflow_correctness`, `sop_correctness`, `answer_completeness`). Under this protocol, repair was triggered solely when categorical violations occurred (17 repair triggers observed across 70 queries), while continuous confidence $c(A)$ was recorded as an observational diagnostic.
+- **Current Certification Gate ($c(A) \ge 0.85$)**: In the current codebase (`critic.py`), certification requires both that all categorical checks pass **and** that scalar confidence $c(A) \ge 0.85$. If this composite threshold had been enforced historically, queries with passing checks but $c(A) < 0.85$ would also have triggered repair. Both historical and current configurations are verified and regression-tested in `tests/test_critic_threshold_regression.py`.
 
 ### Historical Provenance & Discrepancy Note (0.8585 vs. 0.9883)
 Earlier repository documentation drafts listed exploratory uncalibrated preliminary numbers (e.g., Faithfulness 0.8585). Forensic audit of Git commit `6183cd3` confirmed that those preliminary figures were clerical placeholders, while the inferential delta (+0.1094), p-value ($5.95 \times 10^{-10}$), and Cohen's $d_z$ ($1.0809$) were copy-pasted directly from the empirical primary trial. All numbers reported in the table above and in the manuscript represent the true empirical observations from the complete $N=70$ paired benchmark trial ($350$ runs) in `results/master_results.csv`.

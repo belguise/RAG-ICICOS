@@ -1,7 +1,8 @@
 """
 BPMN Process Graph Retriever Implementation.
-Phase 3 BPMN Knowledge Integration: Performs topological graph reasoning over
-ICICoS business process models (tasks, gateways, sequence flows, and swimlane actors).
+Phase 3 BPMN Knowledge Integration: Selects relevant process graphs represented through
+the project's custom BPMNProcessGraph structure and produces directed topological analysis
+together with serialized process narratives.
 """
 
 import re
@@ -16,8 +17,9 @@ from agentic_rag_sop.retrieval.base import BaseKnowledgeRetriever
 class BPMNRetriever(BaseKnowledgeRetriever):
     """
     Retriever for BPMN Process Models and Workflow Topology.
-    Performs deterministic graph reasoning to answer workflow sequence,
-    approval hierarchy, decision gateway, and actor responsibility inquiries.
+    Selects relevant process graphs via the canonical BPMNProcessGraph structure and performs
+    directed topological reasoning (successor analysis, XOR decision gateway branching,
+    predecessor step counting, and serialized process narratives).
     """
 
     def __init__(self, storage_manager: Optional[BPMNStorageManager] = None):

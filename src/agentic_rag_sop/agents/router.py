@@ -1,7 +1,10 @@
 """
 Router Agent.
-Phase 2.2 Agentic Layer: Classifies query intent and dynamically routes the query
-to the appropriate knowledge source (SOP, BPMN, or BOTH).
+Phase 2.2 Agentic Layer: Classifies query intent across 5 operational intent labels
+(document_requirement, payment_question, procedural_question, workflow_question, general_information)
+and dynamically routes the query to 3 retrieval targets (SOP, BPMN, or BOTH).
+Note: The ICICoS ProcessQA evaluation benchmark partitions test queries into 4 benchmark categories
+(document_requirement, workflow, decision_gateway, hybrid), which are distinct from operational intents.
 """
 
 import json
@@ -69,7 +72,7 @@ Berikan respon HANYA dalam format JSON yang valid persis seperti skema berikut t
 
 
 class RouterAgent:
-    """Agent that classifies intent and directs queries to optimal retrievers."""
+    """Agent that classifies intent across 5 operational intent labels and directs queries to 3 retrieval targets (SOP, BPMN, BOTH)."""
 
     def __init__(self, llm: Optional[BaseChatModel] = None):
         try:

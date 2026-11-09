@@ -1,7 +1,8 @@
 """
 Process-Aware Chunker.
-Splits text while preserving procedural continuity and enriching every chunk
-with the 7 mandatory metadata attributes.
+Splits text using recursive character-based splitting with paragraph-, line-,
+and sentence-oriented separators, followed by rule-based metadata enrichment
+and provenance preservation across the 8 schema attributes.
 """
 
 from typing import List
@@ -14,8 +15,9 @@ from agentic_rag_sop.ingestion.metadata import enrich_chunk_metadata
 
 class ProcessAwareChunker:
     """
-    Chunks SOP and process documents while ensuring strict metadata preservation.
-    Keeps BPMN atomic steps intact when appropriate.
+    Chunks SOP and process documents using recursive character-based text splitting
+    while ensuring strict metadata preservation across the 8 schema attributes.
+    Preserves BPMN atomic steps intact when appropriate.
     """
 
     def __init__(self, chunk_size: int = None, chunk_overlap: int = None):
